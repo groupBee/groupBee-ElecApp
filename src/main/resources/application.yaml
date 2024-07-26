@@ -1,0 +1,25 @@
+server:
+  port: 9522
+
+spring:
+  datasource:
+    url: ${ELEC_APP_DATASOURCE_URL}
+    username: ${DATASOURCE_USERNAME}
+    password: ${DATASOURCE_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    generate-ddl: true
+    show-sql: true
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    properties:
+      hibernate:
+        format_sql: true
+
+
+  data:
+    mongodb:
+      uri: mongodb://127.0.0.1:27017/final

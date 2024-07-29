@@ -1,7 +1,14 @@
+import { Route, Routes } from 'react-router-dom';
+import WriteForm from "../pages/WriteForm";
+import Mainpage from '../pages/Mainpage';
+
 const RouterMain=()=>{
     return(
         <div>
-            <h1>RouterMain</h1>
+            <Routes>
+                <Route path="/" element={<Mainpage/>}/>
+                <Route path='/elecapp/create'  element={<WriteForm/>}/>
+            </Routes>
         </div>
     )
 }

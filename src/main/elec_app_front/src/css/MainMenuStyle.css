@@ -1,5 +1,10 @@
 ul.menu li{
     float: left;
+    margin-right: 30px;
+    cursor: pointer;
+    border: 1px solid gray;
+    width: 300px;
+    text-align: center;
 }
 ul.menu{
     list-style: none;

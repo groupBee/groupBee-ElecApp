@@ -3,9 +3,10 @@ import ReactDOM from 'react-dom/client'
 import App from './App.jsx'
 import './index.css'
 import Mainpage from './pages/Mainpage.jsx'
+import Root from './router/Root.jsx'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <div>
-      <Mainpage/>
+      <Root/>
   </div>
 )

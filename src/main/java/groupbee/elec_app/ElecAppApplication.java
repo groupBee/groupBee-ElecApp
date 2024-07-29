@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 
 
-@EnableMongoRepositories(basePackages = "groupbee.elec_app.approve.data")
+@EnableMongoRepositories(basePackages = "groupbee.elec_app.approve.repository")
 @SpringBootApplication(scanBasePackages = {"groupbee.elec_app"})
 public class ElecAppApplication {
 

@@ -114,7 +114,6 @@ pgdata/
 # PostgreSQL log files
 pg_log/
 # MongoDB data directory
-data/
 logs/
 # OS-specific files
 *.swp

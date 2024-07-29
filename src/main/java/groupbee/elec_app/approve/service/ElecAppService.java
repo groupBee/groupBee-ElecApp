@@ -6,10 +6,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @AllArgsConstructor
 @Service
@@ -58,5 +55,13 @@ public class ElecAppService {
         } else {
             return "fail";
         }
+    }
+
+    public List<Object> getElecAppDetails(String ele_id){
+        List<Object> details = new ArrayList<>();
+
+
+
+        return details;
     }
 }

@@ -19,17 +19,19 @@ public class EleAppController {
     final private ElecAppService elecAppService;
     final private MinioService minioService;
 
+    //전자결재 작성
     @PostMapping("/elecapp/create")
     public void saveEleApp(@RequestBody ElecApp elecApp){
         elecAppService.save(elecApp);
     }
-
+    //전자결재 파일 업로드
     @PostMapping("/elecapp/uploadfile")
     private String uploadFile(@RequestParam("file") MultipartFile file){
 
-        String fileName=minioService.uploadFile("elec_app","groupbee",file);
+        String fileName=minioService.uploadFile("groupbee","elec_app",file);
 
         return fileName;
     }
+
 
 }

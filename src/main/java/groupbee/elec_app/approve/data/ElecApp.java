@@ -20,33 +20,38 @@ public class ElecApp {
     @Id
     private String id;
 
-    private String first_approver;
+    private String firstApprover;
 
-    private String second_approver;
+    private String secondApprover;
 
-    private String third_approver;
+    private String thirdApprover;
 
-    private String rejection_reason;
+    private String rejectionReason;
     //UUID 첨부파일
-    private String attached_file;
+    private String attachedFile;
     //원본파일명
-    private String original_file;
+    private String originalFile;
 
     private String writer;
     // 임시저장 : 0, 저장(작성완료) : 1
-    private int approve_status;
+    private int approveStatus;
     // 현재 결재 상황 몇번째 승인자까지 갔는지
-    private int approve_type;
+    private int approveType;
     // 보안등급
     private int level;
+
+    //작성자 정보
+    private String position;
+
+    private String department;
 
     // 작성일
     private Date writeday;
     // 결재 기한 최종일
-    private Date approve_date;
+    private Date approveDate;
 
     // 결재문서 종류 0:품의서 1:휴가신청서 2:지출보고서
-    private int app_doc_type;
+    private int appDocType;
 
     // 이어지는 테이블에 들어갈 양식
     private Map<String, Object> additionalFields;

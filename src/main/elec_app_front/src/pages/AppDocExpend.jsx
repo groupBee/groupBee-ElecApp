@@ -1,10 +1,10 @@
 import {useState} from "react";
 
-const AppDocExpend=({})=>{
+const AppDocExpend=({handleAdditionalFieldChange})=>{
     //요청일자
     const [requestDate,setRequestDate]=useState('');
     //지출유형
-    const [expend_type,setExpend_type]=useState(0);
+    const [expendType,setExpendType]=useState(0);
     const [title,setTitle]=useState('');
     const [content,setContent]=useState('');
     const [price,setPrice]=useState(0);
@@ -12,52 +12,88 @@ const AppDocExpend=({})=>{
     const [finalPrice,setFinalPrice]=useState(0);
     const [monetaryUnit,setMonetaryUnit]=useState(0);
 
-    const changeunit = (e) => {
+    const handleRequestDateChange = (e) => {
+        setRequestDate(e.target.value);
+        handleAdditionalFieldChange("requestDate", e.target.value);
+    };
+
+    const handleExpendTypeChange = (e) => {
+        setExpendType(e.target.value);
+        handleAdditionalFieldChange("expendType", e.target.value);
+    };
+
+    const handleTitleChange = (e) => {
+        setTitle(e.target.value);
+        handleAdditionalFieldChange("title", e.target.value);
+    };
+
+    const handleContentChange = (e) => {
+        setContent(e.target.value);
+        handleAdditionalFieldChange("content", e.target.value);
+    };
+
+    const handlePriceChange = (e) => {
+        setPrice(e.target.value);
+        handleAdditionalFieldChange("price", e.target.value);
+    };
+
+    const handleNoteChange = (e) => {
+        setNote(e.target.value);
+        handleAdditionalFieldChange("note", e.target.value);
+    };
+
+    const handleFinalPriceChange = (e) => {
+        setFinalPrice(e.target.value);
+        handleAdditionalFieldChange("finalPrice", e.target.value);
+    };
+
+    const handleMonetaryUnitChange = (e) => {
         setMonetaryUnit(parseInt(e.target.value));
+        handleAdditionalFieldChange("monetaryUnit", e.target.value);
     }
     return(
         <>
             <tr>
                 <td>요청일자</td>
                 <td>
-                    <input type='date' value={requestDate} onChange={(e) => setRequestDate(e.target.value)}/>
+                    <input type='date' value={requestDate} name='requestDate' onChange={handleRequestDateChange}/>
                 </td>
             </tr>
             <tr>
                 <td>지출유형</td>
                 <td>
-                    <input type='number' value={expend_type} onChange={(e) => setExpend_type(e.target.value)}/>
+                    <input type='number' value={expendType} name='expend_type' onChange={handleExpendTypeChange}/>
                 </td>
             </tr>
             <tr>
                 <td>제목</td>
                 <td>
-                    <input type='text' value={title} onChange={(e) => setTitle(e.target.value)}/>
+                    <input type='text' value={title} name='title' onChange={handleTitleChange}/>
                 </td>
             </tr>
             <tr>
                 <td>지출내용</td>
                 <td>
-                    <input type='text' value={content} onChange={(e) => setContent(e.target.value)}/>
+                    <input type='text' value={content} name='content' onChange={handleContentChange}/>
                 </td>
             </tr>
             <tr>
                 <td>금액</td>
                 <td>
-                    <input type='number' value={price} onChange={(e) => setPrice(e.target.value)}/>
+                    <input type='number' value={price} name='price' onChange={handlePriceChange}/>
                 </td>
             </tr>
             <tr>
                 <td>비고</td>
                 <td>
-                    <input type='text' value={note} onChange={(e) => setNote(e.target.value)}/>
+                    <input type='text' value={note} name='note' onChange={handleNoteChange}/>
                 </td>
             </tr>
             <tr>
                 <td>최종금액</td>
                 <td>
-                    <input type='number' value={finalPrice} onChange={(e) => setFinalPrice(e.target.value)}/>
-                    <select defaultValue={monetaryUnit} onChange={changeunit}>
+                    <input type='number' value={finalPrice} name='finalPrice' onChange={handleFinalPriceChange}/>
+                    <select defaultValue={monetaryUnit} onChange={handleMonetaryUnitChange} name='monetaryUnit'>
                         <option value={0}>원</option>
                         <option value={1}>달러</option>
                         <option value={2}>엔</option>

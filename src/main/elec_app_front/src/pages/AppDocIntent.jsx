@@ -16,23 +16,23 @@ const AppDocIntent=({handleAdditionalFieldChange})=>{
     return(
         <>
             <tr>
-                <td>제목</td>
+                <td style={{fontSize:'23px'}}>제목</td>
                 <td colSpan={7}>
                     <input type='text' value={title} name='title' onChange={handleTitleChange}
-                    style={{width:'100%'}}/>
+                    style={{width:'100%',fontSize:'23px'}}/>
                 </td>
             </tr>
             <tr>
-                <td colSpan={8} style={{height:'50px'}}>품의내용</td>
+                <td colSpan={8} style={{height:'50px',fontSize:'23px'}}>품의내용</td>
             </tr>
             <tr>
                 <td colSpan={8}>
                     <input type='text' value={content} name='content' onChange={handleContentChange}
-                           style={{height:'650px', width:'100%'}}/>
+                           style={{height:'650px', width:'100%',fontSize:'23px'}}/>
                 </td>
             </tr>
             <tr>
-                <td colSpan={8} style={{height:'50px'}}>위와 같이 품의사유로 검토 후 결제 바랍니다.</td>
+                <td colSpan={8} style={{height:'50px',fontSize:'23px'}}>위와 같이 품의사유로 검토 후 결제 바랍니다.</td>
             </tr>
         </>
     )

@@ -29,7 +29,7 @@ const WriteForm = () => {
         setOriginalFile(uploadFile);
         const uploadForm = new FormData();
         uploadForm.append("file", uploadFile);
-        axios.post('http://localhost:9522/elecapp/uploadfile', uploadForm, {
+        axios.post('/elecapp/uploadfile', uploadForm, {
             headers: { "Content-Type": "multipart/form-data" }
         })
         .then(res => {
@@ -54,7 +54,7 @@ const WriteForm = () => {
 
     const createApp = () => {
         const originalFileName = originalFile ? originalFile.name : '';
-        axios.post('http://localhost:9522/elecapp/create', {
+        axios.post('/elecapp/create', {
             writer, firstApprover, secondApprover, thirdApprover,
             originalFile: originalFileName, attachedFile, approveStatus, appDocType, level,
             approveType, position, department, additionalFields
@@ -80,14 +80,14 @@ const WriteForm = () => {
                 </caption>
                 <tbody className='tableborder'>
                 <tr>
-                    <td colSpan={4} rowSpan={3}>{appDocType === 0 ? '품의서' : appDocType === 1 ? '휴가신청서' : '지출보고서'}</td>
-                    <td rowSpan={3}>결제</td>
-                    <td>최초승인자</td>
-                    <td>중간승인자</td>
-                    <td>최종승인자</td>
+                    <td colSpan={4} rowSpan={3} style={{fontSize:'60px'}}>{appDocType === 0 ? '품 의 서' : appDocType === 1 ? '휴 가 신 청 서' : '지 출 보 고 서'}</td>
+                    <td rowSpan={3} style={{fontSize:'23px'}}>결제</td>
+                    <td style={{height:'50px',fontSize:'23px'}}>최초승인자</td>
+                    <td style={{fontSize:'23px'}}>중간승인자</td>
+                    <td style={{fontSize:'23px'}}>최종승인자</td>
                 </tr>
                 <tr>
-                    <td style={{height:'100px'}}></td>
+                    <td style={{height:'150px'}}></td>
                     <td></td>
                     <td></td>
                 </tr>
@@ -103,30 +103,34 @@ const WriteForm = () => {
                     </td>
                 </tr>
                 <tr>
-                    <td style={{width:'70px'}}>성명</td>
-                    <td><input type="text" value={writer} onChange={(e) => setWriter(e.target.value)}/></td>
-                    <td style={{width:'70px'}}>부서</td>
-                    <td><input type="text" value={department} onChange={(e) => setDepartment(e.target.value)}/></td>
-                    <td style={{width:'70px'}}>직급</td>
-                    <td><input type="text" value={position} onChange={(e) => setPosition(e.target.value)}/></td>
-                    <td style={{width:'70px'}}>보안등급</td>
-                    <td><input type="number" value={level} onChange={(e) => setLevel(e.target.value)}/></td>
+                    <td style={{width:'70px',fontSize:'23px'}}>성명</td>
+                    <td><input type="text" value={writer} onChange={(e) => setWriter(e.target.value)}
+                    style={{fontSize:'23px',width:'175px'}}/></td>
+                    <td style={{width:'70px',fontSize:'23px'}}>부서</td>
+                    <td><input type="text" value={department} onChange={(e) => setDepartment(e.target.value)}
+                               style={{fontSize:'23px',width:'175px'}}/></td>
+                    <td style={{width:'70px',fontSize:'23px'}}>직급</td>
+                    <td><input type="text" value={position} onChange={(e) => setPosition(e.target.value)}
+                               style={{fontSize:'23px',width:'175px'}}/></td>
+                    <td style={{width:'70px',fontSize:'23px'}}>보안등급</td>
+                    <td><input type="number" value={level} onChange={(e) => setLevel(e.target.value)}
+                               style={{fontSize:'23px',width:'175px'}}/></td>
                 </tr>
                 {appDocType === 0 && <AppDocIntent/>}
                 {appDocType === 1 && <AppDocVacation handleAdditionalFieldChange={handleAdditionalFieldChange}/>}
                 {appDocType === 2 && <AppDocExpend/>}
                 {appDocType > 2 && <NewAppDocType/>}
-                <tr>
-                    <td>첨부파일</td>
-                    <td colSpan={7}><input type="file" ref={fileRef} onChange={uploadPhoto}/></td>
+                <tr style={{fontSize:'23px'}}>
+                    <td colSpan={2}>첨부파일</td>
+                    <td colSpan={6}><input type="file" ref={fileRef} onChange={uploadPhoto}/></td>
                 </tr>
                 </tbody>
                 <tbody>
-                <tr>
+                <tr style={{fontSize:'23px'}}>
                     <td colSpan={8}><input type="date" value={approveDate} onChange={(e) => setApproveDate(e.target.value)}
                     style={{marginTop:'50px'}}/></td>
                 </tr>
-                <tr>
+                <tr style={{fontSize:'23px'}}>
                     <td colSpan={4} style={{height:'50px'}}></td>
                     <td>서명</td>
                     <td>신청자 : </td>

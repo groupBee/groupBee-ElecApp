@@ -23,6 +23,7 @@ const WriteForm = () => {
     const [department, setDepartment] = useState('');
     const [additionalFields, setAdditionalFields] = useState({});
 
+    //사진 업로드 후 업로드된 파일명 반환
     const uploadPhoto = (e) => {
         const uploadFile = e.target.files[0];
         setOriginalFile(uploadFile);
@@ -40,10 +41,12 @@ const WriteForm = () => {
         });
     }
 
+    //문서 타입별로 폼 추가
     const changeAppDoc = (e) => {
         setAppDocType(parseInt(e.target.value));
     }
 
+    // 추가 필드 변경 핸들러
     const handleAdditionalFieldChange = (key, value) => {
         setAdditionalFields(prevFields => ({
             ...prevFields,
@@ -51,7 +54,9 @@ const WriteForm = () => {
         }));
     };
 
+    // 전자결재 create
     const createApp = () => {
+        
         const originalFileName = originalFile ? originalFile.name : '';
         axios.post('http://localhost:9522/elecapp/create', {
             writer, firstApprover, secondApprover, thirdApprover,
@@ -114,10 +119,10 @@ const WriteForm = () => {
                         <td>결재기한 최종일</td>
                         <td><input type="date" value={approveDate} onChange={(e) => setApproveDate(e.target.value)} /></td>
                     </tr>
-                    {appDocType === 0 && <AppDocIntent />}
+                    {appDocType === 0 && <AppDocIntent handleAdditionalFieldChange={handleAdditionalFieldChange}/>}
                     {appDocType === 1 && <AppDocVacation handleAdditionalFieldChange={handleAdditionalFieldChange} />}
-                    {appDocType === 2 && <AppDocExpend />}
-                    {appDocType > 2 && <NewAppDocType />}
+                    {appDocType === 2 && <AppDocExpend handleAdditionalFieldChange={handleAdditionalFieldChange}/>}
+                    {appDocType > 2 && <NewAppDocType handleAdditionalFieldChange={handleAdditionalFieldChange}/>}
                     <tr>
                         <td><Button variant="outlined" color="warning" onClick={() => setApproveStatus('1')}>임시저장</Button></td>
                         <td><Button variant="outlined" color="warning" onClick={createApp}>작성완료</Button></td>

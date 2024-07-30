@@ -27,11 +27,13 @@ public class ElecAppService {
         if (elecApp.getWriteday() == null) {
             elecApp.setWriteday(new Date());
         }
+        System.out.println(elecApp.toString());
 
         // 기본 테이블 저장
         ElecApp savedElecApp = repository.save(elecApp);
         // 저장 후 id 가져오기
         String id = savedElecApp.getId();
+        System.out.println(id);
 
         // 타입에 따른 저장
         if (savedElecApp.getAdditionalFields() != null) {

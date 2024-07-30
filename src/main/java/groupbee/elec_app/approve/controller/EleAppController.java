@@ -21,10 +21,14 @@ public class EleAppController {
 
     //****작성****
 
-    //전자결재 작성
     @PostMapping("/elecapp/create")
-    public void saveEleApp(@RequestBody ElecApp elecApp){
+    public String saveEleApp(@RequestBody ElecApp elecApp){
+        System.out.println("department>>>" + elecApp.getDepartment());
+        System.out.println("writer>>>" + elecApp.getWriter());
+        System.out.println("firstApprover>>>" + elecApp.getFirstApprover());
+        System.out.println("additionalFields>>>" + elecApp.getAdditionalFields());
         elecAppService.save(elecApp);
+        return "success";
     }
     //전자결재 파일 업로드
     @PostMapping("/elecapp/uploadfile")
@@ -58,7 +62,8 @@ public class EleAppController {
 
     //로그인된 아이디가 올린 결재 리스트 구하기
     @PostMapping("/elecapp/sentapp")
-    public List<ElecApp> findbywriter(@RequestParam String writer) {
+    public List<ElecApp> findByWriter(@RequestBody Map<String, String> requestData) {
+        String writer = requestData.get("writer");
         return elecAppService.findByElecId(writer);
     }
 

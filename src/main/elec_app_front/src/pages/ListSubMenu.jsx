@@ -1,7 +1,7 @@
 const ListSubMenu=()=>{
     return(
         <div>
-            <ul>
+            <ul className="minimenu">
                 <li>번호</li>
                 <li>종류</li>
                 <li>기안자</li>

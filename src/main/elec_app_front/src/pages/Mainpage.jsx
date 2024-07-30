@@ -3,27 +3,20 @@ import ListSubMenu from "./ListSubMenu.jsx";
 import MainMenu from "./MainMenu.jsx";
 import StatusMenu from "./StatusMenu.jsx";
 import "../css/MainMenuStyle.css";
+import SubPage from "./SentList.jsx";
+import { useParams } from "react-router-dom";
 
 
 const Mainpage =()=>{
+
+
     return(
         <div>
-            <h1 style={{marginTop:'30px'}}>Mainpage</h1>
-            <div style={{border:'1px solid gray'}}>
-                <MainMenu/>
+            <div>
+                <StatusMenu/>
             </div>
-            <div className="mainPosition">
-                <div style={{border:'1px solid gray'}}>
-                    <StatusMenu/>
-                </div>
-                <br/><br/><br/><br/>
-                <h3>결재수신 목록</h3>
-                <div style={{border:'1px solid gray'}}>
-                    <ListSubMenu/>
-                </div>
-                <div style={{border:'1px solid gray'}}>
-                    <List/>
-                </div>
+            <div>
+                <ListSubMenu/>
             </div>
         </div>
     )

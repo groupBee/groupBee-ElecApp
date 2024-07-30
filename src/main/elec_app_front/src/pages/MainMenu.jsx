@@ -7,9 +7,11 @@ const MainMenu=()=>{
             MainMenu
             <div>
                 <ul className="menu">
-                    <li>결재현황</li>
+                    <li><NavLink to={'/elecapp/mainList'}>결재현황</NavLink></li>
                     <li><NavLink to={'/elecapp/create'}>작성하기</NavLink></li>
-                    <li>발신목록</li>
+                    <li>
+                        <NavLink to={'/elecapp/sentList'}>발신목록</NavLink>
+                    </li>
                 </ul>
             </div>
         </div>

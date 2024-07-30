@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 import java.util.Map;
 
+@CrossOrigin(origins = "http://localhost:5173")
 @RestController
 @AllArgsConstructor
 public class EleAppController {
@@ -22,15 +23,13 @@ public class EleAppController {
 
     //전자결재 작성
     @PostMapping("/elecapp/create")
-    public void saveEleApp(@RequestBody ElecApp elecApp){
+    public void saveEleApp(@RequestParam ElecApp elecApp){
         elecAppService.save(elecApp);
     }
     //전자결재 파일 업로드
     @PostMapping("/elecapp/uploadfile")
-    public String uploadFile(@RequestParam("file") MultipartFile file){
-
-        String fileName=minioService.uploadFile("groupbee","elec_app",file);
-
+    public String uploadFile(@RequestParam("file") MultipartFile file) {
+        String fileName = minioService.uploadFile("groupbee", "elec_app", file);
         return fileName;
     }
 

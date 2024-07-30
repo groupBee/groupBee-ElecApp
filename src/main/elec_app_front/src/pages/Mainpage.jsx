@@ -8,8 +8,6 @@ import { useParams } from "react-router-dom";
 
 
 const Mainpage =()=>{
-
-
     return(
         <div>
             <div>
@@ -17,6 +15,9 @@ const Mainpage =()=>{
             </div>
             <div>
                 <ListSubMenu/>
+            </div>
+            <div>
+                <List/>
             </div>
         </div>
     )

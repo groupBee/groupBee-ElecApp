@@ -10,7 +10,7 @@ export default defineConfig({
         target: 'http://localhost:9522', // 백엔드 서버의 실제 URL
         changeOrigin: true,
         secure: false,
-        rewrite: path => path.replace(/^\/elecapp/, '')
+        // rewrite: path => path.replace(/^\/elecapp/, '')
       }
     }
   }

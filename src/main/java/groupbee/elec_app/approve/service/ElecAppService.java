@@ -114,7 +114,9 @@ public class ElecAppService {
 			: 내가 1번 approver인데 문서 상태가 3이상일때 숫자
     */
         public Map<String, Integer> countByApproverAndStatus(String memberId) {
+            // memberId가 이미 문자열이라면, 추가적인 변환은 필요하지 않습니다.
             List<ElecApp> list = repository.findByAnyApprover(memberId);
+
             Map<String, Integer> countMap = new HashMap<>();
             int readyCount = 0;
             int ingCount = 0;
@@ -151,6 +153,7 @@ public class ElecAppService {
             countMap.put("readyCount", readyCount);
             countMap.put("ingCount", ingCount);
             countMap.put("doneCount", doneCount);
+
             return countMap;
         }
 

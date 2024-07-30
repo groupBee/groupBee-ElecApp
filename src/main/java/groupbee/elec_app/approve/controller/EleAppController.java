@@ -5,13 +5,14 @@ import groupbee.elec_app.approve.data.ElecApp;
 import groupbee.elec_app.approve.service.ElecAppService;
 import groupbee.elec_app.service.minio.MinioService;
 import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Map;
 
-@CrossOrigin(origins = "http://localhost:5173")
+//@CrossOrigin(origins = "http://localhost:5173")
 @RestController
 @AllArgsConstructor
 public class EleAppController {
@@ -76,8 +77,10 @@ public class EleAppController {
 			memberId가
     */
     @PostMapping("/elecapp/receivedApp")
-    public Map<String, Integer> receivedApp(@RequestParam String memberId) {
-        return elecAppService.countByApproverAndStatus(memberId);
+    public ResponseEntity<Map<String, Integer>> getStatusCount(@RequestBody Map<String, String> requestBody) {
+        String memberId = requestBody.get("memberId");
+        Map<String, Integer> statusCounts = elecAppService.countByApproverAndStatus(memberId);
+        return ResponseEntity.ok(statusCounts);
     }
 
     // 결재 상태에 따른 문서 리스트 반환

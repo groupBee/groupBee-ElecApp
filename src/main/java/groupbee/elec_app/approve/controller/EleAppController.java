@@ -23,7 +23,7 @@ public class EleAppController {
 
     //전자결재 작성
     @PostMapping("/elecapp/create")
-    public void saveEleApp(@RequestParam ElecApp elecApp){
+    public void saveEleApp(@RequestBody ElecApp elecApp){
         elecAppService.save(elecApp);
     }
     //전자결재 파일 업로드

@@ -17,15 +17,22 @@ const AppDocIntent=({handleAdditionalFieldChange})=>{
         <>
             <tr>
                 <td>제목</td>
-                <td>
-                    <input type='text' value={title} name='title' onChange={handleTitleChange}/>
+                <td colSpan={7}>
+                    <input type='text' value={title} name='title' onChange={handleTitleChange}
+                    style={{width:'100%'}}/>
                 </td>
             </tr>
             <tr>
-                <td>품의내용</td>
-                <td>
-                    <input type='text' value={content} name='title' onChange={handleContentChange}/>
+                <td colSpan={8} style={{height:'50px'}}>품의내용</td>
+            </tr>
+            <tr>
+                <td colSpan={8}>
+                    <input type='text' value={content} name='content' onChange={handleContentChange}
+                           style={{height:'650px', width:'100%'}}/>
                 </td>
+            </tr>
+            <tr>
+                <td colSpan={8} style={{height:'50px'}}>위와 같이 품의사유로 검토 후 결제 바랍니다.</td>
             </tr>
         </>
     )

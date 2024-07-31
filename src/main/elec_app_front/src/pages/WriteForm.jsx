@@ -16,7 +16,7 @@ const WriteForm = () => {
     const [originalFile, setOriginalFile] = useState(null);
     const [attachedFile, setAttachedFile] = useState('');
     const [approveStatus, setApproveStatus] = useState(0);
-    const [approveType, setApproveType] = useState(0);
+    const [approveType, setApproveType] = useState(2);
     const [level, setLevel] = useState(0);
     const [approveDate, setApproveDate] = useState('');
     const [appDocType, setAppDocType] = useState(0);
@@ -116,10 +116,10 @@ const WriteForm = () => {
                     <td><input type="number" value={level} onChange={(e) => setLevel(e.target.value)}
                                style={{fontSize:'23px',width:'175px'}}/></td>
                 </tr>
-                {appDocType === 0 && <AppDocIntent/>}
+                {appDocType === 0 && <AppDocIntent handleAdditionalFieldChange={handleAdditionalFieldChange}/>}
                 {appDocType === 1 && <AppDocVacation handleAdditionalFieldChange={handleAdditionalFieldChange}/>}
-                {appDocType === 2 && <AppDocExpend/>}
-                {appDocType > 2 && <NewAppDocType/>}
+                {appDocType === 2 && <AppDocExpend handleAdditionalFieldChange={handleAdditionalFieldChange}/>}
+                {appDocType > 2 && <NewAppDocType handleAdditionalFieldChange={handleAdditionalFieldChange}/>}
                 <tr style={{fontSize:'23px'}}>
                     <td colSpan={2}>첨부파일</td>
                     <td colSpan={6}><input type="file" ref={fileRef} onChange={uploadPhoto}/></td>

@@ -1,5 +1,6 @@
+import { NavLink } from "react-router-dom";
 
-const List = ({appList}) => {
+const List = ({appList,memberId}) => {
         
 
     return (
@@ -26,11 +27,12 @@ const List = ({appList}) => {
                                      item.appDocType === 1 ? '휴가신청서' :
                                      item.appDocType === 2 ? '지출보고서' : ''}
                                 </td>
-                                <th>
+                                <td>
+                                    <NavLink to={`/elecapp/sign/${item.appDocType}/${memberId}/${item.id}`}>
                                     {
                                         item.additionalFields.title?item.additionalFields.title:'휴가신청서'
-                                    }
-                                </th>
+                                    }</NavLink>
+                                </td>
                                 <td>{item.writer}</td>
                                 <td>{item.department}</td>
                                 <td>

@@ -23,4 +23,5 @@ public interface ElecAppRepository extends MongoRepository<ElecApp,String> {
     @Query("{ '$or': [ { 'firstApprover': ?0 }, { 'secondApprover': ?0 }, { 'thirdApprover': ?0 } ] }")
     List<ElecApp> findByAnyApprover(String memberId);
 
+
 }

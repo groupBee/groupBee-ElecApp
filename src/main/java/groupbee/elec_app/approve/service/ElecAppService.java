@@ -101,6 +101,11 @@ public class ElecAppService {
 
     //****조회****
 
+    //문서아이디로 디테일 구하기
+    public ElecApp findByID(String elecAppId){
+        return repository.findById(elecAppId).get();
+    }
+
     //로그인된 아이디가 올린 결재 리스트 구하기
     public List<ElecApp> findByElecId(String writer){
         return repository.findByWriterOrderByApproveType(writer);
@@ -124,15 +129,13 @@ public class ElecAppService {
 
             for (ElecApp app : list) {
                 if (memberId.equals(app.getFirstApprover())) {
-                    if (app.getApproveType() < 1) {
-                        readyCount++;
-                    } else if (app.getApproveType() == 1) {
+                    if (app.getApproveType() == 1) {
                         ingCount++;
                     } else {
                         doneCount++;
                     }
                 } else if (memberId.equals(app.getSecondApprover())) {
-                    if (app.getApproveType() < 2) {
+                    if (app.getApproveType()!=0&&app.getApproveType() < 2) {
                         readyCount++;
                     } else if (app.getApproveType() == 2) {
                         ingCount++;
@@ -140,7 +143,7 @@ public class ElecAppService {
                         doneCount++;
                     }
                 } else if (memberId.equals(app.getThirdApprover())) {
-                    if (app.getApproveType() < 3) {
+                    if (app.getApproveType()!=0&&app.getApproveType() < 3) {
                         readyCount++;
                     } else if (app.getApproveType() == 3) {
                         ingCount++;

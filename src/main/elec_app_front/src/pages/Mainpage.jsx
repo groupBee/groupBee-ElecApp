@@ -13,6 +13,7 @@ const Mainpage =()=>{
     const {memberId,status,sort}=useParams();
     const [appList,setAppList]=useState([]);
     const [order,setOrder]=useState('');
+    const [appId,setAppId]=useState('');
     const chageList = () => {
         axios.get(`/elecapp/status?memberId=${memberId}&status=${status}&order=${order === '' ? sort : order}`)
             .then(res => {
@@ -23,7 +24,7 @@ const Mainpage =()=>{
     useEffect(() => {
         console.log('changedOrder=' + order)
         chageList();
-    }, [status, order]); // 상태 배열에 'order' 추가
+    }, [status, order]);
     return(
         <div>
             <div>
@@ -33,7 +34,7 @@ const Mainpage =()=>{
             <div>
                 <ListSubMenu setOrder={setOrder}/>
             </div>
-            {memberId==null&&status==null&&sort?'':<div><br/><br/><List appList={appList}/></div>}
+            {memberId==null&&status==null&&sort?'':<div><br/><br/><List appList={appList} memberId={memberId}/></div>}
         </div>
     )
 }

@@ -7,7 +7,7 @@ const StatusMenu=()=>{
     const [ing,setIng] = useState(0);
     const [done,setDone] = useState(0);
     const [sort,setSort]=useState('no');
-    const [memberId,setMemberId]=useState('a');
+    const [memberId,setMemberId]=useState('이가현');
     const getStatusCount=()=>{
         axios.post("/elecapp/receivedApp", { memberId: memberId })
         .then(res => {

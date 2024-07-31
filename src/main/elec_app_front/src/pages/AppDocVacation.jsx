@@ -6,12 +6,9 @@ const AppDocVacation = ({ handleAdditionalFieldChange }) => {
     const [end, setEnd] = useState('');
     const [day, setDay] = useState('');
     const [type, setType] = useState('');
+    const [detail,setDetail]=useState('');
 
     // 휴가 정보 변경 시 상위 컴포넌트에 알림
-    const handleDaysChange = (e) => {
-        setDays(e.target.value);
-        handleAdditionalFieldChange("days", e.target.value);
-    };
 
     const handleStartChange = (e) => {
         setStart(e.target.value);
@@ -23,58 +20,49 @@ const AppDocVacation = ({ handleAdditionalFieldChange }) => {
         handleAdditionalFieldChange("end", e.target.value);
     };
 
-    const handleDayChange = (e) => {
-        setDay(e.target.value);
-        handleAdditionalFieldChange("day", e.target.value);
-    };
 
     const handleTypeChange = (e) => {
         setType(e.target.value);
         handleAdditionalFieldChange("type", e.target.value);
     };
 
+    const handleDetailChange = (e) => {
+        setDetail(e.target.value);
+        handleAdditionalFieldChange("detail", e.target.value);
+    };
     return (
         <>
             <tr>
-                <th>휴가 일수</th>
-                <td>
-                    <input type="number" value={days} onChange={handleDaysChange} />
+                <th colSpan={2}>휴가 종류</th>
+                <td colSpan={6}>
+                    <input type="radio" value="반차" checked={type === "반차"} onChange={handleTypeChange}
+                    style={{width:'20px'}}/>반차
+                    <input type="radio" value="월차" checked={type === "월차"} onChange={handleTypeChange}
+                           style={{width:'20px'}}/>월차
+                    <input type="radio" value="병가" checked={type === "병가"} onChange={handleTypeChange}
+                           style={{width:'20px'}}/>병가
+                    <input type="radio" value="기타" checked={type === "기타"} onChange={handleTypeChange}
+                           style={{width:'20px'}}/>기타
                 </td>
             </tr>
-            {days == 1 &&
-                <tr>
-                    <td>날짜</td>
-                    <td>
-                        <input type="date" value={day} name="day" onChange={handleDayChange} />
-                    </td>
-                </tr>
-            }
-            {days > 1 &&
-                <>
-                    <tr>
-                        <th>휴가 시작일</th>
-                        <td>
-                            <input type="date" value={start} name="start" onChange={handleStartChange} />
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>휴가 종료일</th>
-                        <td>
-                            <input type="date" value={end} name="end" onChange={handleEndChange} />
-                        </td>
-                    </tr>
-                </>
-            }
             <tr>
-                <th>휴가 종류</th>
-                <td>
-                    <select value={type} onChange={handleTypeChange}>
-                        <option value="반차">반차</option>
-                        <option value="월차">월차</option>
-                        <option value="병가">병가</option>
-                        <option value="기타">기타</option>
-                    </select>
+                <th colSpan={2}>휴가 기간</th>
+                <td colSpan={6}>
+                    <input type="date" value={start} name="start" onChange={handleStartChange}/>
+                    ~<input type="date" value={end} name="end" onChange={handleEndChange}/>
                 </td>
+            </tr>
+            <tr>
+                <td colSpan={8} style={{height: '50px'}}>내 용</td>
+            </tr>
+            <tr>
+                <td colSpan={8}>
+                    <input type='text' value={detail} name='detail' onChange={handleDetailChange}
+                           style={{height: '600px', width: '100%'}}/>
+                </td>
+            </tr>
+            <tr>
+                <td colSpan={8} style={{height:'50px'}}>위와 같이 휴가을 신청하오니 허락해주시기 바랍니다.</td>
             </tr>
         </>
     );

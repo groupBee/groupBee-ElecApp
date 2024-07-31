@@ -1,0 +1,14 @@
+.tableborder tr
+{
+    border: 1px solid black;
+}
+.tableborder td
+{
+    border: 1px solid black;
+    /*font-size:23px;*/
+}
+input
+{
+    border: none;
+    height: 50px;
+}

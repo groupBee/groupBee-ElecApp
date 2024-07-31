@@ -103,7 +103,7 @@ public class ElecAppService {
 
     //로그인된 아이디가 올린 결재 리스트 구하기
     public List<ElecApp> findByElecId(String writer){
-        return repository.findByWriter(writer);
+        return repository.findByWriterOrderByApproveType(writer);
 
     }
 
@@ -199,7 +199,8 @@ public class ElecAppService {
                 return Comparator.comparing(ElecApp::getPosition, Comparator.nullsLast(Comparator.naturalOrder()));
             case "department":
                 return Comparator.comparing(ElecApp::getDepartment, Comparator.nullsLast(Comparator.naturalOrder()));
-            case "no":
+            case "writer":
+                return Comparator.comparing(ElecApp::getWriter, Comparator.nullsLast(Comparator.naturalOrder()));
             default:
                 return Comparator.comparing(ElecApp::getWriteday, Comparator.nullsLast(Comparator.reverseOrder()));
         }

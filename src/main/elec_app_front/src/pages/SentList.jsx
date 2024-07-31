@@ -6,7 +6,7 @@ const SentList = () => {
     const [writer, setWriter] = useState('손가원');
 
     const getList = () => {
-        axios.post("http://localhost:9522/elecapp/sentapp", { writer: writer })
+        axios.post("/elecapp/sentapp", { writer: writer })
             .then(res => {
                 setList(res.data);
             })

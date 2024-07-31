@@ -13,7 +13,7 @@ const RouterMain=()=>{
             </div>
             <Routes>
                 <Route path='/' element={<Mainpage/>}/>
-                {/* <Route path=`/${memberId}/ready`/> */}
+                <Route path={`/:memberId/:status/:sort`} element={<Mainpage/>}/>
                 <Route path='/elecapp/'>
                     <Route path='create' element={<WriteForm/>}/>
                     <Route path='myList' element={<SentList/>}/>

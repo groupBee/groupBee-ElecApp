@@ -90,6 +90,7 @@ public class EleAppController {
             @RequestParam String memberId,
             @RequestParam String status,
             @RequestParam(required = false, defaultValue = "no") String order) {
+        System.out.println(order);
         return elecAppService.getElecAppsByApproverAndStatus(memberId, status, order);
     }
 }

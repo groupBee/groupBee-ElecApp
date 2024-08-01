@@ -9,7 +9,9 @@ const AppDocExpend = ({ handleAdditionalFieldChange }) => {
     const [monetaryUnit, setMonetaryUnit] = useState(0);
 
     // 내역을 관리하는 배열 상태, 기본적으로 10개 초기화
-    const [details, setDetails] = useState(Array(10).fill(null).map(() => ({ content: '', price: 0, note: '' })));
+
+    const [details, setDetails] = useState(Array(9).fill(null).map(() => ({ content: '', price: 0, note: '' })));
+
 
     const handleRequestDateChange = (e) => {
         setRequestDate(e.target.value);
@@ -65,12 +67,27 @@ const AppDocExpend = ({ handleAdditionalFieldChange }) => {
                 </td>
                 <td>지출유형</td>
                 <td>
-                    <input type='number' value={expendType} name='expend_type' onChange={handleExpendTypeChange} />
+                    <select defaultValue={expendType} onChange={handleExpendTypeChange} name='expend_type'>
+                        <option value={0}>자재비</option>
+                        <option value={1}>배송비</option>
+                        <option value={2}>교육비</option>
+                        <option value={3}>기타</option>
+                    </select>
                 </td>
+            </tr>
+            <tr style={{ fontSize: '23px' }}>
+                <td>제목</td>
+                <td colSpan={7}>
+                    <input type='text' value={title} name='title' onChange={handleTitleChange} style={{width:'100%'}}/>
+                </td>
+            </tr>
+            <tr style={{ fontSize: '23px' }}>
                 <td>최종금액</td>
-                <td style={{ width: '40px' }}>
+
+                <td colSpan={7}>
                     <input type='number' value={finalPrice} name='finalPrice' onChange={handleFinalPriceChange}
-                           style={{ width: '70px' }} />
+                           style={{width: '80%'}}/>
+
                     <select defaultValue={monetaryUnit} onChange={handleMonetaryUnitChange} name='monetaryUnit'>
                         <option value={0}>원</option>
                         <option value={1}>달러</option>
@@ -78,15 +95,10 @@ const AppDocExpend = ({ handleAdditionalFieldChange }) => {
                     </select>
                 </td>
             </tr>
-            <tr style={{ fontSize: '23px' }}>
-                <td>제목</td>
-                <td colSpan={7}>
-                    <input type='text' value={title} name='title' onChange={handleTitleChange} />
-                </td>
-            </tr>
-            <tr style={{ fontSize: '23px' }}>
+
+            <tr style={{fontSize: '23px'}}>
                 <td rowSpan={details.length + 1}>내역</td>
-                <td colSpan={3} style={{ height: '50px' }}>지출내용</td>
+                <td colSpan={3} style={{height: '50px'}}>지출내용</td>
                 <td colSpan={3}>금액</td>
                 <td colSpan={2}>비고
                     <button onClick={addDetail}>+</button>
@@ -94,12 +106,15 @@ const AppDocExpend = ({ handleAdditionalFieldChange }) => {
                 </td>
             </tr>
             {details.map((detail, index) => (
-                <tr key={index} style={{ fontSize: '23px' }}>
+
+                <tr key={index} style={{fontSize: '23px'}}>
+
                     <td colSpan={3} style={{ height: '65px' }}>
                         <input
                             type='text'
                             value={detail.content}
                             name={`content-${index}`}
+                            style={{width:'100%'}}
                             onChange={(e) => handleDetailChange(index, 'content', e.target.value)}
                         />
                     </td>
@@ -108,6 +123,7 @@ const AppDocExpend = ({ handleAdditionalFieldChange }) => {
                             type='number'
                             value={detail.price}
                             name={`price-${index}`}
+                            style={{width:'100%'}}
                             onChange={(e) => handleDetailChange(index, 'price', e.target.value)}
                         />
                     </td>
@@ -116,6 +132,7 @@ const AppDocExpend = ({ handleAdditionalFieldChange }) => {
                             type='text'
                             value={detail.note}
                             name={`note-${index}`}
+                            style={{width:'100%'}}
                             onChange={(e) => handleDetailChange(index, 'note', e.target.value)}
                         />
                     </td>

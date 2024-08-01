@@ -3,10 +3,10 @@ import { useEffect, useState } from "react";
 
 const SentList = () => {
     const [list, setList] = useState([]);
-    const [writer, setWriter] = useState('손가원');
+    const [writer, setWriter] = useState('김창인');
 
     const getList = () => {
-        axios.post("http://localhost:9522/elecapp/sentapp", { writer: writer })
+        axios.post("/elecapp/sentapp", { writer: writer })
             .then(res => {
                 setList(res.data);
             })

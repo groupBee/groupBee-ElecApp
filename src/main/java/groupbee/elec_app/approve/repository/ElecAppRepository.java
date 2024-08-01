@@ -12,7 +12,7 @@ public interface ElecAppRepository extends MongoRepository<ElecApp,String> {
 
 
     // writer 이름으로 문서 찾기
-    List<ElecApp> findByWriter(String writer);
+    List<ElecApp> findByWriterOrderByApproveType(String writer);
 
     /*	- 로그인된 회원아이디가 approver 1,2,3에 포함될때 리스트에서 문서 결재 상태로 찾기(count)
 			: 내가 1번 approver인데 문서 상태가 1번일때 숫자 … (count)
@@ -22,5 +22,6 @@ public interface ElecAppRepository extends MongoRepository<ElecApp,String> {
     // approver 이름으로 문서 찾기
     @Query("{ '$or': [ { 'firstApprover': ?0 }, { 'secondApprover': ?0 }, { 'thirdApprover': ?0 } ] }")
     List<ElecApp> findByAnyApprover(String memberId);
+
 
 }

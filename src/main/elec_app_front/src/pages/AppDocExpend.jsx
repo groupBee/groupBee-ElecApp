@@ -9,7 +9,9 @@ const AppDocExpend = ({ handleAdditionalFieldChange }) => {
     const [monetaryUnit, setMonetaryUnit] = useState(0);
 
     // 내역을 관리하는 배열 상태, 기본적으로 10개 초기화
+
     const [details, setDetails] = useState(Array(9).fill(null).map(() => ({ content: '', price: 0, note: '' })));
+
 
     const handleRequestDateChange = (e) => {
         setRequestDate(e.target.value);
@@ -81,9 +83,11 @@ const AppDocExpend = ({ handleAdditionalFieldChange }) => {
             </tr>
             <tr style={{ fontSize: '23px' }}>
                 <td>최종금액</td>
+
                 <td colSpan={7}>
                     <input type='number' value={finalPrice} name='finalPrice' onChange={handleFinalPriceChange}
                            style={{width: '80%'}}/>
+
                     <select defaultValue={monetaryUnit} onChange={handleMonetaryUnitChange} name='monetaryUnit'>
                         <option value={0}>원</option>
                         <option value={1}>달러</option>
@@ -91,6 +95,7 @@ const AppDocExpend = ({ handleAdditionalFieldChange }) => {
                     </select>
                 </td>
             </tr>
+
             <tr style={{fontSize: '23px'}}>
                 <td rowSpan={details.length + 1}>내역</td>
                 <td colSpan={3} style={{height: '50px'}}>지출내용</td>
@@ -101,7 +106,9 @@ const AppDocExpend = ({ handleAdditionalFieldChange }) => {
                 </td>
             </tr>
             {details.map((detail, index) => (
+
                 <tr key={index} style={{fontSize: '23px'}}>
+
                     <td colSpan={3} style={{ height: '65px' }}>
                         <input
                             type='text'

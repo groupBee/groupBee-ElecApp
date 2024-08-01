@@ -12,7 +12,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 import java.util.Map;
 
-//@CrossOrigin(origins = "http://localhost:5173")
 @RestController
 @AllArgsConstructor
 public class EleAppController {
@@ -48,18 +47,29 @@ public class EleAppController {
     }
     //문서 승인상태 바꾸기 (몇번째 승인자까지 갔느냐)
     @PostMapping("/elecapp/chageAppType")
-    public String chageAppType(@RequestParam String elecAppId) {
+    public String chageAppType(@RequestBody Map<String, String> request) {
+        String elecAppId = request.get("elecAppId");
         return elecAppService.chageAppType(elecAppId);
-
     }
 
     //문서 거절사유 받고 문서상태 거절로 바꾸기
     @PostMapping("/elecapp/rejection")
     public String rejection(@RequestParam String elecAppId, @RequestParam String rejectionReason) {
-        return elecAppService.appRejection(elecAppId,rejectionReason);
+
+        ElecApp elecApp=elecAppService.findByID(elecAppId);
+        elecApp.setApproveType(0);
+        elecAppService.save(elecApp);
+
+        return elecAppService.appRejection(elecAppId, rejectionReason);
     }
 
     //****조회****
+
+    //문서 아이디로 디테일 조회하기
+    @GetMapping("/elecapp/findById")
+    public ElecApp findById(@RequestParam String elecAppId){
+        return elecAppService.findByID(elecAppId);
+    }
 
     //로그인된 아이디가 올린 결재 리스트 구하기
     @PostMapping("/elecapp/sentapp")
@@ -90,6 +100,7 @@ public class EleAppController {
             @RequestParam String memberId,
             @RequestParam String status,
             @RequestParam(required = false, defaultValue = "no") String order) {
+        System.out.println(order);
         return elecAppService.getElecAppsByApproverAndStatus(memberId, status, order);
     }
 }

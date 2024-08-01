@@ -3,6 +3,7 @@ import WriteForm from "../pages/WriteForm";
 import Mainpage from '../pages/Mainpage';
 import MainMenu from '../pages/MainMenu';
 import SentList from '../pages/SentList';
+import Detail from '../pages/Detail';
 
 const RouterMain=()=>{
     return(
@@ -13,11 +14,12 @@ const RouterMain=()=>{
             </div>
             <Routes>
                 <Route path='/' element={<Mainpage/>}/>
-                {/* <Route path=`/${memberId}/ready`/> */}
+                <Route path={`/:memberId/:status/:sort`} element={<Mainpage/>}/>
                 <Route path='/elecapp/'>
                     <Route path='create' element={<WriteForm/>}/>
                     <Route path='myList' element={<SentList/>}/>
                     <Route path='mainList' element={<Mainpage/>}/>
+                    <Route path={'sign/:appDocType/:memberId/:appId'} element={<Detail/>}/>
                 </Route>
             </Routes>
         </div>

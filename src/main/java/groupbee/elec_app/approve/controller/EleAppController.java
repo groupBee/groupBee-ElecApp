@@ -5,19 +5,35 @@ import groupbee.elec_app.approve.data.ElecApp;
 import groupbee.elec_app.approve.service.ElecAppService;
 import groupbee.elec_app.service.minio.MinioService;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @RestController
 @AllArgsConstructor
+@RequestMapping("/api")
 public class EleAppController {
 
     final private ElecAppService elecAppService;
     final private MinioService minioService;
+    final private RedisTemplate<String, Object> redisTemplate;
+
+    //****redis****
+    @GetMapping("/elecapp/redis")
+    public Map<String, Object> redis() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("memberId", redisTemplate.opsForValue().get("memberId"));
+        map.put("department", redisTemplate.opsForValue().get("department"));
+        map.put("memberName", redisTemplate.opsForValue().get("memberName"));
+        map.put("position", redisTemplate.opsForValue().get("position"));
+        return map;
+    }
 
     //****작성****
 

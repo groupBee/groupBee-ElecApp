@@ -160,6 +160,12 @@ public class ElecAppService {
             return countMap;
         }
 
+    //결재 상태가 어떻든 내가 온 문서 전체 리스트 반환
+    public List<ElecApp> getAllReceived (String memberId){
+            List<ElecApp> list = repository.findByAnyApprover(memberId);
+            return list;
+    }
+
 
     // 결재 상태에 따른 문서 리스트 반환(기본정렬 order안보내면 최신순 writer의 department,appdoctype,position별로 나열 가능
     public List<ElecApp> getElecAppsByApproverAndStatus(String memberId, String status, String order) {

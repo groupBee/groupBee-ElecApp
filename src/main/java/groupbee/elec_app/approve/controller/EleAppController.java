@@ -102,12 +102,6 @@ public class EleAppController {
 
 			memberId가
     */
-    @PostMapping("/elecapp/receivedApp")
-    public ResponseEntity<Map<String, Integer>> getStatusCount(@RequestBody Map<String, String> requestBody) {
-        String memberId = requestBody.get("memberId");
-        Map<String, Integer> statusCounts = elecAppService.countByApproverAndStatus(memberId);
-        return ResponseEntity.ok(statusCounts);
-    }
 
     // 결재 상태에 따른 문서 리스트 반환
     // 결재 상태에 따른 문서 리스트 반환(기본정렬 order안보내면 최신순 writer의 department,appdoctype,position별로 나열 가능
@@ -118,5 +112,10 @@ public class EleAppController {
             @RequestParam(required = false, defaultValue = "no") String order) {
         System.out.println(order);
         return elecAppService.getElecAppsByApproverAndStatus(memberId, status, order);
+    }
+    //문서상태 전체 리스트 반환
+    @GetMapping("/elecapp/allreceived")
+    public List<ElecApp> getElecAppsReceived(@RequestParam String memberId) {
+        return elecAppService.getAllReceived(memberId);
     }
 }

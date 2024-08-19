@@ -23,3 +23,8 @@ spring:
   data:
     mongodb:
       uri: mongodb://127.0.0.1:27017/final
+
+springdoc:
+  swagger-ui:
+    path: /api/elecapp/swagger-ui/index.html
+

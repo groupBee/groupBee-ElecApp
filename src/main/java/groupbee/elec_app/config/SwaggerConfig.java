@@ -14,11 +14,10 @@ public class SwaggerConfig {
                 .info(apiInfo());
     }
 
-
     private Info apiInfo() {
         return new Info()
                 .title("GroupBee Api 명세서")
-                .description("각 컨틀롤러들의 RestApi 명세서")
+                .description("각 컨트롤러들의 RestApi 명세서")
                 .version("1.0");
     }
 }

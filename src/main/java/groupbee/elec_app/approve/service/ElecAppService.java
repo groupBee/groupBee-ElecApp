@@ -1,8 +1,10 @@
 package groupbee.elec_app.approve.service;
 
 import groupbee.elec_app.approve.data.ElecApp;
+import groupbee.elec_app.approve.interceptor.SessionInterceptor;
 import groupbee.elec_app.approve.repository.ElecAppRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +17,7 @@ public class ElecAppService {
 
     private final ElecAppRepository repository;
     private final MongoTemplate mongoTemplate;
+    private final SessionInterceptor sessionInterceptor;
 
     //elec_app 전체 출력
     public List<ElecApp> findAll() {

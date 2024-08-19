@@ -169,8 +169,8 @@ public class ElecAppService {
             return list;
     }
 
-
-    // 결재 상태에 따른 문서 리스트 반환(기본정렬 order안보내면 최신순 writer의 department,appdoctype,position별로 나열 가능
+    // 결재 상태에 따른 문서 리스트 반환(기본정렬 order 안보내면 최신순 writer의 department, appdoctype, position별로 나열 가능)
+// 결재 상태에 따른 문서 리스트 반환(기본정렬 order 안보내면 최신순 writer의 department, appdoctype, position별로 나열 가능)
     public List<ElecApp> getElecAppsByApproverAndStatus(String memberId, String status, String order) {
         List<ElecApp> list = repository.findByAnyApprover(memberId);
 
@@ -178,30 +178,87 @@ public class ElecAppService {
             return List.of(); // 리스트가 비어있거나 null일 경우 빈 리스트 반환
         }
 
+        // 필터링 및 상태 라벨 설정
         List<ElecApp> filteredList = list.stream()
-                .filter(app -> {
-                    switch (status.toLowerCase()) {
-                        case "ready":
-                            return (memberId.equals(app.getFirstApprover()) && app.getApproveType() < 1)
-                                    || (memberId.equals(app.getSecondApprover()) && app.getApproveType() < 2)
-                                    || (memberId.equals(app.getThirdApprover()) && app.getApproveType() < 3);
-                        case "ing":
-                            return (memberId.equals(app.getFirstApprover()) && app.getApproveType() == 1)
-                                    || (memberId.equals(app.getSecondApprover()) && app.getApproveType() == 2)
-                                    || (memberId.equals(app.getThirdApprover()) && app.getApproveType() == 3);
-                        case "done":
-                            return (memberId.equals(app.getFirstApprover()) && app.getApproveType() > 1)
-                                    || (memberId.equals(app.getSecondApprover()) && app.getApproveType() > 2)
-                                    || (memberId.equals(app.getThirdApprover()) && app.getApproveType() > 3);
-                        default:
-                            return false;
-                    }
+                .filter(app -> shouldInclude(app, memberId, status))
+                .map(app -> {
+                    String statusLabel = determineStatusLabel(app, memberId, status);
+                    app.getAdditionalFields().put("status", statusLabel);
+                    return app;
                 })
                 .sorted(getComparator(order))
                 .collect(Collectors.toList());
 
         return filteredList;
     }
+
+    // 문서를 포함할지 결정하는 로직 (필터링 로직)
+    private boolean shouldInclude(ElecApp app, String memberId, String status) {
+        // writer가 memberId와 같으면서, firstApprover도 memberId와 같은 경우, 리스트에서 제외
+        if (app.getWriter().equals(memberId) && app.getFirstApprover().equals(memberId)) {
+            return false;
+        }
+
+        return filterByStatus(app, memberId, status);
+    }
+
+    // 상태에 따른 필터링 로직
+    private boolean filterByStatus(ElecApp app, String memberId, String status) {
+        if (status.equalsIgnoreCase("all")) {
+            return true; // "all"일 경우 필터링을 건너뜀
+        }
+
+        if (status.equalsIgnoreCase("rejected")) {
+            return isRejected(app, memberId); // 반려 상태만 필터링
+        } else {
+            return !isRejected(app, memberId) && (
+                    (status.equalsIgnoreCase("ready") && isReady(app, memberId)) ||
+                            (status.equalsIgnoreCase("ing") && isInProgress(app, memberId)) ||
+                            (status.equalsIgnoreCase("done") && isDone(app, memberId))
+            );
+        }
+    }
+
+    // 상태 라벨 결정 로직
+    private String determineStatusLabel(ElecApp app, String memberId, String status) {
+        if (isRejected(app, memberId)) {
+            return "반려";
+        } else if (isReady(app, memberId)) {
+            return "결재 대기";
+        } else if (isInProgress(app, memberId)) {
+            return "결재 중";
+        } else if (isDone(app, memberId)) {
+            return "결재 완료";
+        } else {
+            return "알 수 없음"; // 이 부분은 절대로 실행되지 않도록 보장해야 합니다.
+        }
+    }
+
+    // 개별 상태 확인 메서드
+    private boolean isRejected(ElecApp app, String memberId) {
+        return (memberId.equals(app.getFirstApprover()) && app.getApproveType() == 0)
+                || (memberId.equals(app.getSecondApprover()) && app.getApproveType() == 0)
+                || (memberId.equals(app.getThirdApprover()) && app.getApproveType() == 0);
+    }
+
+    private boolean isReady(ElecApp app, String memberId) {
+        return (memberId.equals(app.getSecondApprover()) && app.getApproveType() < 2)
+                || (memberId.equals(app.getThirdApprover()) && app.getApproveType() < 3);
+    }
+
+    private boolean isInProgress(ElecApp app, String memberId) {
+        return (memberId.equals(app.getFirstApprover()) && app.getApproveType() == 1)
+                || (memberId.equals(app.getSecondApprover()) && app.getApproveType() == 2)
+                || (memberId.equals(app.getThirdApprover()) && app.getApproveType() == 3);
+    }
+
+    private boolean isDone(ElecApp app, String memberId) {
+        return (memberId.equals(app.getFirstApprover()) && app.getApproveType() > 1)
+                || (memberId.equals(app.getSecondApprover()) && app.getApproveType() > 2)
+                || (memberId.equals(app.getThirdApprover()) && app.getApproveType() > 3);
+    }
+
+
     //리스트 나열 order
     private Comparator<ElecApp> getComparator(String order) {
         switch (order.toLowerCase()) {

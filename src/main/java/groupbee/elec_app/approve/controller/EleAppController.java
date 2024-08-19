@@ -36,17 +36,17 @@ public class EleAppController {
         String name="";
         String position="";
         String departmentName="";
-        if(userInfo.get("data")!=null) {
+//        if(userInfo.get("data")!=null) {
             // "data" 필드에서 필요한 정보를 추출합니다.
             Map<String, Object> data = (Map<String, Object>) userInfo.get("data");
             // 필요한 정보 추출
             name = (String) data.get("name");
             position = (String) data.get("position");
             departmentName = (String) data.get("departmentName");
-        }else   {
-            name="손가원";
-            position="사장";
-            departmentName="인사부";}
+//        }else   {
+//            name="손가원";
+//            position="사장";
+//            departmentName="인사부";}
         //테스트코드 없으면 바꿔도됩
 
         // map에 정보 담기
@@ -129,7 +129,7 @@ public class EleAppController {
     public List<ElecApp> getElecAppsByStatus(
             @RequestParam String memberId,
             @RequestParam String status,
-            @RequestParam(required = false, defaultValue = "no") String order) {
+            @RequestParam(required = false, defaultValue = "all") String order) {
         return elecAppService.getElecAppsByApproverAndStatus(memberId, status, order);
     }
     //문서상태 전체 리스트 반환

@@ -16,7 +16,7 @@ public class SessionInterceptor implements RequestInterceptor {
             HttpServletRequest request = attributes.getRequest();
 //            HttpSession session = request.getSession();
 //            String springSession = request.getHeader("Cookie");
-            String springSession = "SESSION=ZGVlOWZjYzUtYzk3Zi00NjdmLTgzMTUtZmMyNDAwMTVhNjM5";
+            String springSession = "SESSION=YjhkNWI1YzctYTgwZi00NDljLTgzOGUtOGU3MWFlN2U2Mjlk";
 //            HttpSession session = attributes.getRequest().getSession(false);
             template.header("Cookie", springSession);
         }

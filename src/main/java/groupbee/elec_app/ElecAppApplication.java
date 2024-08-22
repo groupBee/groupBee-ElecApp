@@ -7,7 +7,7 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 
 @EnableFeignClients(basePackages = "groupbee.elec_app.approve.feign")
 @EnableMongoRepositories(basePackages = "groupbee.elec_app.approve.repository")
-@SpringBootApplication(scanBasePackages = {"groupbee.elec_app"})
+@SpringBootApplication(scanBasePackages = "groupbee.elec_app")
 public class ElecAppApplication {
 
     public static void main(String[] args)

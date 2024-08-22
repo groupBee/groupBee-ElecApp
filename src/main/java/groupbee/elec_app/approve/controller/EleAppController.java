@@ -70,6 +70,7 @@ public class EleAppController {
     @PostMapping("/elecapp/uploadfile")
     public String uploadFile(@RequestParam("file") MultipartFile file) {
         String fileName = minioService.uploadFile("groupbee", "elec_app", file);
+        System.out.println("fileName>>>" + fileName);
         return fileName;
     }
 

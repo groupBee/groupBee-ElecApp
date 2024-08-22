@@ -22,9 +22,17 @@ spring:
 
   data:
     mongodb:
-      uri: mongodb://127.0.0.1:27017/final
+      uri: ${MONGO_DB_URL}
 
 springdoc:
   swagger-ui:
-    path: /api/elecapp/swagger-ui/index.html
+    path: ${SWAGGER_URL}
 
+
+mail:
+  host: ${MAIL_HOST}
+  port: ${MAIL_PORT}
+  protocol: ${MAIL_PROTOCOL}
+  smtp:
+    starttls:
+      enable: ${MAIL_STARTTLS}

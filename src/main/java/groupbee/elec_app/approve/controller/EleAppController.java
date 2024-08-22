@@ -2,24 +2,60 @@ package groupbee.elec_app.approve.controller;
 
 
 import groupbee.elec_app.approve.data.ElecApp;
+import groupbee.elec_app.approve.feign.EmployeeFeignClient;
 import groupbee.elec_app.approve.service.ElecAppService;
 import groupbee.elec_app.service.minio.MinioService;
 import lombok.AllArgsConstructor;
-import org.springframework.http.ResponseEntity;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @RestController
 @AllArgsConstructor
+@RequestMapping("/api")
 public class EleAppController {
 
     final private ElecAppService elecAppService;
     final private MinioService minioService;
+    final private RedisTemplate<String, Object> redisTemplate;
+    final private EmployeeFeignClient employeeFeignClient;
 
     //****작성****
+
+    //*** 작성하기전 로그인 된 정보 넣기 ***
+    @GetMapping("/elecapp/getinfo")
+    public Map<String,Object> getMemberInfo(){
+        Map<String, Object> map = new HashMap<>();
+
+        // Feign 클라이언트를 통해 데이터를 받아옵니다.
+        Map<String, Object> userInfo = employeeFeignClient.getUserInfo();
+        String name="";
+        String position="";
+        String departmentName="";
+//        if(userInfo.get("data")!=null) {
+            // "data" 필드에서 필요한 정보를 추출합니다.
+            Map<String, Object> data = (Map<String, Object>) userInfo.get("data");
+            // 필요한 정보 추출
+            name = (String) data.get("name");
+            position = (String) data.get("position");
+            departmentName = (String) data.get("departmentName");
+//        }else   {
+//            name="손가원";
+//            position="사장";
+//            departmentName="인사부";}
+        //테스트코드 없으면 바꿔도됩
+
+        // map에 정보 담기
+        map.put("name", name);
+        map.put("position", position);
+        map.put("departmentName", departmentName);
+
+        return map;
+    }
 
     @PostMapping("/elecapp/create")
     public String saveEleApp(@RequestBody ElecApp elecApp){
@@ -34,6 +70,7 @@ public class EleAppController {
     @PostMapping("/elecapp/uploadfile")
     public String uploadFile(@RequestParam("file") MultipartFile file) {
         String fileName = minioService.uploadFile("groupbee", "elec_app", file);
+        System.out.println("fileName>>>" + fileName);
         return fileName;
     }
 
@@ -86,12 +123,6 @@ public class EleAppController {
 
 			memberId가
     */
-    @PostMapping("/elecapp/receivedApp")
-    public ResponseEntity<Map<String, Integer>> getStatusCount(@RequestBody Map<String, String> requestBody) {
-        String memberId = requestBody.get("memberId");
-        Map<String, Integer> statusCounts = elecAppService.countByApproverAndStatus(memberId);
-        return ResponseEntity.ok(statusCounts);
-    }
 
     // 결재 상태에 따른 문서 리스트 반환
     // 결재 상태에 따른 문서 리스트 반환(기본정렬 order안보내면 최신순 writer의 department,appdoctype,position별로 나열 가능
@@ -99,8 +130,12 @@ public class EleAppController {
     public List<ElecApp> getElecAppsByStatus(
             @RequestParam String memberId,
             @RequestParam String status,
-            @RequestParam(required = false, defaultValue = "no") String order) {
-        System.out.println(order);
+            @RequestParam(required = false, defaultValue = "all") String order) {
         return elecAppService.getElecAppsByApproverAndStatus(memberId, status, order);
+    }
+    //문서상태 전체 리스트 반환
+    @GetMapping("/elecapp/allreceived")
+    public List<ElecApp> getElecAppsReceived(@RequestParam String memberId) {
+        return elecAppService.getAllReceived(memberId);
     }
 }

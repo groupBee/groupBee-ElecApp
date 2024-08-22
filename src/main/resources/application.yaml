@@ -22,4 +22,16 @@ spring:
 
   data:
     mongodb:
-      uri: mongodb://127.0.0.1:27017/final
+      uri: ${MONGO_DB_URL}
+
+springdoc:
+  swagger-ui:
+    path: ${SWAGGER_URL}
+
+
+mail:
+
+
+  smtp:
+    starttls:
+

@@ -36,7 +36,6 @@ dependencies {
     implementation 'io.minio:minio:8.5.10'
     //Swagger
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0'
-    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-api:2.5.0'
     implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
@@ -47,12 +46,7 @@ dependencies {
     //loadbalancer
     implementation 'org.springframework.cloud:spring-cloud-starter-loadbalancer'
 
-    //이메일
-    // 스프링 메일 스타터
-    implementation 'org.springframework.boot:spring-boot-starter-mail'
 
-    // Jakarta Mail 라이브러리 (Angus Jakarta Mail로 대체)
-    implementation 'org.eclipse.angus:jakarta.mail:2.0.3'
 }
 
 dependencyManagement {

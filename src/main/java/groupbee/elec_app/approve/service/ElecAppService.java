@@ -168,29 +168,35 @@ public class ElecAppService {
             List<ElecApp> list = repository.findByAnyApprover(memberId);
             return list;
     }
-
-    // 결재 상태에 따른 문서 리스트 반환(기본정렬 order 안보내면 최신순 writer의 department, appdoctype, position별로 나열 가능)
 // 결재 상태에 따른 문서 리스트 반환(기본정렬 order 안보내면 최신순 writer의 department, appdoctype, position별로 나열 가능)
-    public List<ElecApp> getElecAppsByApproverAndStatus(String memberId, String status, String order) {
-        List<ElecApp> list = repository.findByAnyApprover(memberId);
+public List<ElecApp> getElecAppsByApproverAndStatus(String memberId, String status, String order) {
+    List<ElecApp> list = repository.findByAnyApprover(memberId);
 
-        if (list == null || list.isEmpty()) {
-            return List.of(); // 리스트가 비어있거나 null일 경우 빈 리스트 반환
-        }
-
-        // 필터링 및 상태 라벨 설정
-        List<ElecApp> filteredList = list.stream()
-                .filter(app -> shouldInclude(app, memberId, status))
-                .map(app -> {
-                    String statusLabel = determineStatusLabel(app, memberId, status);
-                    app.getAdditionalFields().put("status", statusLabel);
-                    return app;
-                })
-                .sorted(getComparator(order))
-                .collect(Collectors.toList());
-
-        return filteredList;
+    if (list == null || list.isEmpty()) {
+        return List.of(); // 리스트가 비어있거나 null일 경우 빈 리스트 반환
     }
+
+    // 필터링 및 상태 라벨 설정 (approveStatus가 1인 경우를 제외)
+    List<ElecApp> filteredList = list.stream()
+            .filter(app -> app.getApproveStatus() != 1)  // approveStatus가 1인 것을 제외 (임시저장 제외)
+            .filter(app -> shouldInclude(app, memberId, status))
+            .filter(app -> {
+                // approveType이 1일 때 memberId와 thirdApprover가 같지 않은 경우만 포함 (아직 전 승인자가 승인을 하지 않았을때)
+                if (app.getApproveType() == 1) {
+                    return !memberId.equals(app.getThirdApprover());
+                }
+                return true;
+            })
+            .map(app -> {
+                String statusLabel = determineStatusLabel(app, memberId, status);
+                app.getAdditionalFields().put("status", statusLabel);
+                return app;
+            })
+            .sorted(getComparator(order))  // 정렬
+            .collect(Collectors.toList());
+
+    return filteredList;
+}
 
     // 문서를 포함할지 결정하는 로직 (필터링 로직)
     private boolean shouldInclude(ElecApp app, String memberId, String status) {

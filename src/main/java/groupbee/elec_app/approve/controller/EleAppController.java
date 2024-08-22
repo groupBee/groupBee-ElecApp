@@ -21,7 +21,6 @@ public class EleAppController {
 
     final private ElecAppService elecAppService;
     final private MinioService minioService;
-    final private RedisTemplate<String, Object> redisTemplate;
     final private EmployeeFeignClient employeeFeignClient;
 
     //****작성****

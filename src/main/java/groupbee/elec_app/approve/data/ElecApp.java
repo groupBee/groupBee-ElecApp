@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.annotation.Collation;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Date;
@@ -33,7 +34,7 @@ public class ElecApp {
     private String originalFile;
 
     private String writer;
-    // 임시저장 : 0, 저장(작성완료) : 1
+    // 임시저장 : 1, 저장(작성완료) : 0
     private int approveStatus;
     // 현재 결재 상황 몇번째 승인자까지 갔는지
     private int approveType;

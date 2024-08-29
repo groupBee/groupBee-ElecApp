@@ -4,8 +4,8 @@ import groupbee.elec_app.approve.data.ElecApp;
 import groupbee.elec_app.approve.interceptor.SessionInterceptor;
 import groupbee.elec_app.approve.repository.ElecAppRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -18,6 +18,7 @@ public class ElecAppService {
     private final ElecAppRepository repository;
     private final MongoTemplate mongoTemplate;
     private final SessionInterceptor sessionInterceptor;
+    private final ElecAppRepository elecAppRepository;
 
     //elec_app 전체 출력
     public List<ElecApp> findAll() {
@@ -281,6 +282,19 @@ public List<ElecApp> getElecAppsByApproverAndStatus(String memberId, String stat
         }
     }
 
+    //관리자페이지
+    //전체 리스트 조회
+    public List<ElecApp> getAdminElecApps(){
+            return repository.findAll();
+    }
 
+    //삭제
+    public void deleteAdminElecApp(String id) {
+        repository.deleteById(id);
+    }
 
+    //디테일 조회
+    public ElecApp getAdminElecAppDetail (String id){
+            return repository.findById(id).get();
+    }
 }

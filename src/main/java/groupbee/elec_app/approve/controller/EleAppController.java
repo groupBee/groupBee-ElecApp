@@ -137,4 +137,24 @@ public class EleAppController {
     public List<ElecApp> getElecAppsReceived(@RequestParam String memberId) {
         return elecAppService.getAllReceived(memberId);
     }
+
+    //관리자페이지
+    //전체 리스트 조회
+    @GetMapping("/admin/elecapp/list")
+    public List<ElecApp> getAdminElecApps() {
+        return elecAppService.getAdminElecApps();
+    }
+
+    //삭제
+    @GetMapping("/admin/elecapp/delete")
+    public void deleteAdmainApp(@RequestParam String id) {
+        elecAppService.deleteAdminElecApp(id);
+    }
+
+    //디테일 조회
+    @GetMapping("/admin/elecapp/detail")
+    public ElecApp getAdminElecAppDetail(@RequestParam String id) {
+        return elecAppService.getAdminElecAppDetail(id);
+    }
+
 }

@@ -6,11 +6,9 @@ import groupbee.elec_app.approve.feign.EmployeeFeignClient;
 import groupbee.elec_app.approve.service.ElecAppService;
 import groupbee.elec_app.service.minio.MinioService;
 import lombok.AllArgsConstructor;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -28,32 +26,11 @@ public class EleAppController {
     //*** 작성하기전 로그인 된 정보 넣기 ***
     @GetMapping("/elecapp/getinfo")
     public Map<String,Object> getMemberInfo(){
-        Map<String, Object> map = new HashMap<>();
-
-        // Feign 클라이언트를 통해 데이터를 받아옵니다.
         Map<String, Object> userInfo = employeeFeignClient.getUserInfo();
-        String name="";
-        String position="";
-        String departmentName="";
-//        if(userInfo.get("data")!=null) {
-            // "data" 필드에서 필요한 정보를 추출합니다.
-            Map<String, Object> data = (Map<String, Object>) userInfo.get("data");
-            // 필요한 정보 추출
-            name = (String) data.get("name");
-            position = (String) data.get("position");
-            departmentName = (String) data.get("departmentName");
-//        }else   {
-//            name="손가원";
-//            position="사장";
-//            departmentName="인사부";}
-        //테스트코드 없으면 바꿔도됩
+        System.out.println(userInfo);
 
-        // map에 정보 담기
-        map.put("name", name);
-        map.put("position", position);
-        map.put("departmentName", departmentName);
 
-        return map;
+        return userInfo;
     }
 
     @PostMapping("/elecapp/create")
@@ -138,23 +115,6 @@ public class EleAppController {
         return elecAppService.getAllReceived(memberId);
     }
 
-    //관리자페이지
-    //전체 리스트 조회
-    @GetMapping("/admin/elecapp/list")
-    public List<ElecApp> getAdminElecApps() {
-        return elecAppService.getAdminElecApps();
-    }
 
-    //삭제
-    @GetMapping("/admin/elecapp/delete")
-    public void deleteAdmainApp(@RequestParam String id) {
-        elecAppService.deleteAdminElecApp(id);
-    }
-
-    //디테일 조회
-    @GetMapping("/admin/elecapp/detail")
-    public ElecApp getAdminElecAppDetail(@RequestParam String id) {
-        return elecAppService.getAdminElecAppDetail(id);
-    }
 
 }

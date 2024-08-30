@@ -10,4 +10,5 @@ import java.util.Map;
 public interface EmployeeFeignClient {
     @GetMapping("/api/employee/info")
     Map<String,Object> getUserInfo();
+
 }

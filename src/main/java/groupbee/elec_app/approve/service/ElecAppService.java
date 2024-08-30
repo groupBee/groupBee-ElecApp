@@ -5,7 +5,8 @@ import groupbee.elec_app.approve.interceptor.SessionInterceptor;
 import groupbee.elec_app.approve.repository.ElecAppRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -17,8 +18,7 @@ public class ElecAppService {
 
     private final ElecAppRepository repository;
     private final MongoTemplate mongoTemplate;
-    private final SessionInterceptor sessionInterceptor;
-    private final ElecAppRepository elecAppRepository;
+
 
     //elec_app 전체 출력
     public List<ElecApp> findAll() {
@@ -33,13 +33,36 @@ public class ElecAppService {
         }
         System.out.println(elecApp.toString());
 
+        // 우선 해당 파라미터값에 id가 포함되어있으면 아가 테이블 가서 삭제 로직
+        if (elecApp.getId() != null) {
+            String existingId = elecApp.getId();
+            switch (elecApp.getAppDocType()) {
+                case 0:
+                    mongoTemplate.remove(new Query(Criteria.where("elec_id").is(existingId)), "intent");
+                    break;
+                case 1:
+                    mongoTemplate.remove(new Query(Criteria.where("elec_id").is(existingId)), "vacation");
+                    break;
+                case 2:
+                    mongoTemplate.remove(new Query(Criteria.where("elec_id").is(existingId)), "expend");
+                    break;
+                case 3:
+                    String collectionName = elecApp.getAdditionalFields().get("type").toString();
+                    mongoTemplate.remove(new Query(Criteria.where("elec_id").is(existingId)), collectionName);
+                    break;
+                default:
+                    System.out.println("Unsupported document type for deletion");
+                    break;
+            }
+        }
+
         // 기본 테이블 저장
         ElecApp savedElecApp = repository.save(elecApp);
         // 저장 후 id 가져오기
         String id = savedElecApp.getId();
         System.out.println(id);
 
-        // 타입에 따른 저장
+        // 타입에 따른 추가 테이블 저장
         if (savedElecApp.getAdditionalFields() != null) {
             Map<String, Object> additionalFields = new HashMap<>();
             additionalFields.put("elec_id", id);
@@ -57,22 +80,18 @@ public class ElecAppService {
                     break;
                 case 3:
                     mongoTemplate.save(additionalFields, additionalFields.get("type").toString());
+                    break;
                 default:
                     System.out.println("Unsupported document type");
+                    break;
             }
+
             return "success";
         } else {
             return "fail";
         }
     }
 
-    public List<Object> getElecAppDetails(String ele_id){
-        List<Object> details = new ArrayList<>();
-
-
-
-        return details;
-    }
 
     //문서 상태 (임시저장인지 아닌지)변경하기
     public String chageAppStatus(String elecAppId, int approve_status){
@@ -195,7 +214,7 @@ public List<ElecApp> getElecAppsByApproverAndStatus(String memberId, String stat
             })
             .sorted(getComparator(order))  // 정렬
             .collect(Collectors.toList());
-
+    System.out.println(filteredList);
     return filteredList;
 }
 
@@ -255,14 +274,13 @@ public List<ElecApp> getElecAppsByApproverAndStatus(String memberId, String stat
 
     private boolean isInProgress(ElecApp app, String memberId) {
         return (memberId.equals(app.getFirstApprover()) && app.getApproveType() == 1)
-                || (memberId.equals(app.getSecondApprover()) && app.getApproveType() == 2)
-                || (memberId.equals(app.getThirdApprover()) && app.getApproveType() == 3);
+                || (memberId.equals(app.getSecondApprover()) && app.getApproveType() == 2);
     }
 
     private boolean isDone(ElecApp app, String memberId) {
         return (memberId.equals(app.getFirstApprover()) && app.getApproveType() > 1)
                 || (memberId.equals(app.getSecondApprover()) && app.getApproveType() > 2)
-                || (memberId.equals(app.getThirdApprover()) && app.getApproveType() > 3);
+                || (memberId.equals(app.getThirdApprover()) && app.getApproveType() == 3);
     }
 
 
@@ -282,19 +300,5 @@ public List<ElecApp> getElecAppsByApproverAndStatus(String memberId, String stat
         }
     }
 
-    //관리자페이지
-    //전체 리스트 조회
-    public List<ElecApp> getAdminElecApps(){
-            return repository.findAll();
-    }
 
-    //삭제
-    public void deleteAdminElecApp(String id) {
-        repository.deleteById(id);
-    }
-
-    //디테일 조회
-    public ElecApp getAdminElecAppDetail (String id){
-            return repository.findById(id).get();
-    }
 }

@@ -1,7 +1,6 @@
 package groupbee.elec_app.approve.service;
 
 import groupbee.elec_app.approve.data.ElecApp;
-import groupbee.elec_app.approve.interceptor.SessionInterceptor;
 import groupbee.elec_app.approve.repository.ElecAppRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.data.mongodb.core.MongoTemplate;

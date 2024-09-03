@@ -1,6 +1,5 @@
 package groupbee.elec_app.approve.service;
 
-import groupbee.elec_app.approve.service.OdooService;
 import groupbee.elec_app.approve.data.ElecApp;
 import groupbee.elec_app.approve.repository.ElecAppRepository;
 import lombok.AllArgsConstructor;

@@ -9,6 +9,7 @@ import org.springframework.data.mongodb.core.annotation.Collation;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 @Builder
@@ -31,9 +32,9 @@ public class ElecApp {
 
     private String rejectionReason;
     //UUID 첨부파일
-    private String attachedFile;
+    private List<String> attachedFiles;
     //원본파일명
-    private String originalFile;
+    private List<String> originalFiles;
 
     private String writer;
     // 임시저장 : 1, 저장(작성완료) : 0

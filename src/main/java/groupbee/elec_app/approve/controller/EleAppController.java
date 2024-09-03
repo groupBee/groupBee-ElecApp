@@ -13,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.net.MalformedURLException;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -47,12 +48,18 @@ public class EleAppController {
         elecAppService.save(elecApp);
         return "success";
     }
-    //전자결재 파일 업로드
+    //전자결제 파일 여러개 리스트로 받고 리스트로 출력하기
     @PostMapping("/elecapp/uploadfile")
-    public String uploadFile(@RequestParam("file") MultipartFile file) {
-        String fileName = minioService.uploadFile("groupbee", "elec_app", file);
-        System.out.println("fileName>>>" + fileName);
-        return fileName;
+    public List<String> uploadFiles(@RequestParam("files") List<MultipartFile> files) {
+        List<String> fileNames = new ArrayList<>();
+
+        for (MultipartFile file : files) {
+            String fileName = minioService.uploadFile("groupbee", "elec_app", file);
+            System.out.println("fileName>>>" + fileName);
+            fileNames.add(fileName);
+        }
+
+        return fileNames;
     }
 
     //****변경****

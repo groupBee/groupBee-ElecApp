@@ -2,10 +2,10 @@ package groupbee.elec_app.approve.service;
 
 import groupbee.elec_app.approve.data.ElecApp;
 import groupbee.elec_app.approve.feign.EmployeeFeignClient;
+import lombok.AllArgsConstructor;
 import org.apache.xmlrpc.XmlRpcException;
 import org.apache.xmlrpc.client.XmlRpcClient;
 import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.net.MalformedURLException;
@@ -16,25 +16,23 @@ import java.util.*;
 
 import static java.util.Arrays.asList;
 
+@AllArgsConstructor
 @Service
 public class OdooService {
 
-
     private final EmployeeFeignClient employeeFeignClient;
 
-    private final String url;
-    private final String db;
+    private final String url = System.getenv("ODOO_URL");
+    private final String db=System.getenv("ODOO_DB");
+    private final String uid=System.getenv("ODOO_UID");
+    private final String password=System.getenv("ODOO_PASSWORD");
+    private final String username=System.getenv("ODOO_USERNAME");
 
-    public OdooService(EmployeeFeignClient employeeFeignClient, @Value("${ODOO_URL}") String url, @Value("${ODOO_DB}") String db) {
-        this.employeeFeignClient = employeeFeignClient;
-        this.url = url;
-        this.db = db;
-    }
 
     public String sendLeaveReport(ElecApp elecApp){
         try {
             XmlRpcClientConfigImpl config = new XmlRpcClientConfigImpl();
-            config.setServerURL(new URL(String.format("%s/xmlrpc/2/object", this.url)));
+            config.setServerURL(new URL(String.format("%s/xmlrpc/2/object", url)));
             Map<String,Object> getEmployeeIdByIdNumber = employeeFeignClient.getEmployeeIdByIdNumber(elecApp.getWriterIdNumber());
             XmlRpcClient client = new XmlRpcClient();
             client.setConfig(config);
@@ -54,8 +52,8 @@ public class OdooService {
             List<Object> department_id_list = (List<Object>) getEmployeeIdByIdNumber.get("department_id");
             int department_id =(int)department_id_list.get(0) ;
             int resource_calendar_id = 1;
-            int create_uid = 2;
-            int write_uid = 2;
+            int create_uid = Integer.parseInt(uid);
+            int write_uid = Integer.parseInt(uid);
             String private_name =(String)elecApp.getAdditionalFields().get("detail");
             String holiday_type = "employee"; // 개인 휴가 타입
             Object request_date_from = elecApp.getAdditionalFields().get("start"); // 휴가 시작일
@@ -77,9 +75,9 @@ public class OdooService {
             leaveRequestData.put("request_date_to", request_date_to);     // 휴가 종료일
 
             Object[] params = new Object[] {
-                    "groupbee",
+                    db,
                     2, // user ID
-                    "p@ssw0rd", // password
+                    password, // password
                     "hr.leave", // Odoo 모델 이름
                     "create", // 메서드 이름
                     new Object[] { leaveRequestData }
@@ -102,7 +100,7 @@ public class OdooService {
         List<Integer> allHrExpense = new ArrayList<>();
 
         XmlRpcClientConfigImpl config = new XmlRpcClientConfigImpl();
-        config.setServerURL(new URL(String.format("%s/xmlrpc/2/object", this.url)));
+        config.setServerURL(new URL(String.format("%s/xmlrpc/2/object", url)));
         XmlRpcClient client = new XmlRpcClient();
         client.setConfig(config);
 
@@ -164,8 +162,8 @@ public class OdooService {
 
             expenseReportData.put("product_uom_id", 1);
             expenseReportData.put("account_id", 30);
-            expenseReportData.put("create_uid", 2);
-            expenseReportData.put("write_uid", 2);
+            expenseReportData.put("create_uid", uid);
+            expenseReportData.put("write_uid", uid);
             expenseReportData.put("state", "draft");
             expenseReportData.put("date", formatter.format(utilDate));  // 날짜를 String 형식으로 변환하여 전송
             expenseReportData.put("description", elecApp.getAdditionalFields().get("title"));
@@ -182,9 +180,9 @@ public class OdooService {
 
             // Odoo의 'hr.expense' 모델에 create 메서드 호출
             Object[] params = new Object[]{
-                    this.db,
-                    2, // user ID
-                    "p@ssw0rd", // password
+                    db,
+                    uid, // user ID
+                    password, // password
                     "hr.expense", // Odoo 모델 이름
                     "create", // 메서드 이름
                     new Object[]{expenseReportData}
@@ -203,16 +201,16 @@ public class OdooService {
         expenseSheetData.put("department_id", department_id);
         expenseSheetData.put("currency_id", 32);
         expenseSheetData.put("employee_journal_id", 2);
-        expenseSheetData.put("create_uid", 2);
-        expenseSheetData.put("write_uid", 2);
+        expenseSheetData.put("create_uid", uid);
+        expenseSheetData.put("write_uid", uid);
         expenseSheetData.put("name", Integer.parseInt((String) elecApp.getAdditionalFields().get("expendType")) == 0 ? "자재비" : Integer.parseInt((String) elecApp.getAdditionalFields().get("expendType")) == 1 ? "배송비" : Integer.parseInt((String) elecApp.getAdditionalFields().get("expendType")) == 2 ? "교육비" : "기타");
         expenseSheetData.put("total_amount", total_amount);
 
         // 'hr.expense.sheet' 모델에 create 메서드 호출
         Object[] sheetParams = new Object[]{
-                this.db,
-                2, // user ID
-                "p@ssw0rd", // password
+                db,
+                uid, // user ID
+                password, // password
                 "hr.expense.sheet", // Odoo 모델 이름
                 "create", // 메서드 이름
                 new Object[]{expenseSheetData}
@@ -227,9 +225,9 @@ public class OdooService {
 
             // 파라미터 배열 생성
             Object[] updateParams = new Object[]{
-                    this.db,
-                    2, // user ID
-                    "p@ssw0rd", // password
+                    db,
+                    uid, // user ID
+                    password, // password
                     "hr.expense", // Odoo 모델 이름
                     "write", // 메서드 이름
                     asList(
@@ -254,16 +252,16 @@ public class OdooService {
         // Odoo와의 연결 설정
         // Odoo와의 연결 설정
         XmlRpcClientConfigImpl config = new XmlRpcClientConfigImpl();
-        config.setServerURL(new URL(String.format("%s/xmlrpc/2/object", this.url)));
+        config.setServerURL(new URL(String.format("%s/xmlrpc/2/object", url)));
         XmlRpcClient client = new XmlRpcClient();
         client.setConfig(config);
 
         try {
             // "hr.leave.allocation" 모델에서 특정 employee_id에 해당하는 number_of_days 값을 가져오기 위한 검색 조건 설정
             Object[] searchParams = new Object[] {
-                    this.db,
-                    2, // user ID
-                    "p@ssw0rd", // password
+                    db,
+                    uid, // user ID
+                    password, // password
                     "hr.leave.allocation", // Odoo 모델 이름
                     "search",
                     asList(asList(
@@ -276,9 +274,9 @@ public class OdooService {
             if (!ids.isEmpty()) {
                 // 검색된 ID로 "number_of_days" 필드 값 읽기
                 Object[] readParams = new Object[] {
-                        this.db,
-                        2, // user ID
-                        "p@ssw0rd", // password
+                        db,
+                        uid, // user ID
+                        password, // password
                         "hr.leave.allocation", // Odoo 모델 이름
                         "read",
                         asList(ids),

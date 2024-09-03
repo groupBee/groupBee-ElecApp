@@ -28,6 +28,5 @@ springdoc:
   swagger-ui:
     path: ${SWAGGER_URL}
 
-ODOO_URL: http://211.188.51.238:8069
-ODOO_DB: groupbee
+
 

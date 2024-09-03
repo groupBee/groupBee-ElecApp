@@ -46,6 +46,11 @@ dependencies {
     //loadbalancer
     implementation 'org.springframework.cloud:spring-cloud-starter-loadbalancer'
 
+    //odoo
+    testImplementation platform('org.junit:junit-bom:5.10.0')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    // https://mvnrepository.com/artifact/org.apache.xmlrpc/xmlrpc-client
+    implementation 'org.apache.xmlrpc:xmlrpc-client:3.1.3'
 
 }
 

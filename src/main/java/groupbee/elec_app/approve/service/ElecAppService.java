@@ -1,13 +1,17 @@
 package groupbee.elec_app.approve.service;
 
+import groupbee.elec_app.approve.service.OdooService;
 import groupbee.elec_app.approve.data.ElecApp;
 import groupbee.elec_app.approve.repository.ElecAppRepository;
 import lombok.AllArgsConstructor;
+import org.apache.xmlrpc.XmlRpcException;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
+import java.net.MalformedURLException;
+import java.text.ParseException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -17,7 +21,7 @@ public class ElecAppService {
 
     private final ElecAppRepository repository;
     private final MongoTemplate mongoTemplate;
-
+    private final OdooService odooService;
 
     //elec_app 전체 출력
     public List<ElecApp> findAll() {
@@ -105,9 +109,23 @@ public class ElecAppService {
     }
 
     //문서 승인상태 바꾸기 (몇번째 승인자까지 갔느냐)
-    public String chageAppType(String elecAppId){
+    public String chageAppType(String elecAppId) throws MalformedURLException, ParseException, XmlRpcException {
         ElecApp elecApp=repository.findById(elecAppId).get();
         elecApp.setApproveType(elecApp.getApproveType()+1);
+        if(elecApp.getApproveType()==3) {
+            //결재 완료시 지출보고서의 경우 odoo로 create(status == 3)
+            if (elecApp.getAppDocType() == 2) {
+                //여기에 odoo로 지출 보고서 보내기
+                odooService.sendExpenseReport(elecApp);
+            }
+
+            //결재 완료시 휴가신청서의 경우 odoo로 create(status == 3)
+            if (elecApp.getAppDocType() == 1) {
+                //여기에 odoo로 휴가 신청서 보내기
+                odooService.sendLeaveReport(elecApp);
+            }
+
+        }
         repository.save(elecApp);
         return "success";
     }
@@ -125,7 +143,21 @@ public class ElecAppService {
 
     //문서아이디로 디테일 구하기
     public ElecApp findByID(String elecAppId){
-        return repository.findById(elecAppId).get();
+
+
+        //writer의 id 값 던져서 휴가 일 수 read  (additional field 이용하기)
+        ElecApp elecApp=repository.findById(elecAppId).get();
+//        if(elecApp.getAppDocType()==1){
+//            //휴가일수 받아오기
+//
+//
+//            //받아온 값 additionalfields 에 넣기
+//
+//
+//        }
+
+
+        return elecApp;
     }
 
     //로그인된 아이디가 올린 결재 리스트 구하기

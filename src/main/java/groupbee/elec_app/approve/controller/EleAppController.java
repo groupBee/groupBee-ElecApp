@@ -6,9 +6,12 @@ import groupbee.elec_app.approve.feign.EmployeeFeignClient;
 import groupbee.elec_app.approve.service.ElecAppService;
 import groupbee.elec_app.service.minio.MinioService;
 import lombok.AllArgsConstructor;
+import org.apache.xmlrpc.XmlRpcException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.net.MalformedURLException;
+import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
 
@@ -38,7 +41,7 @@ public class EleAppController {
         System.out.println("department>>>" + elecApp.getDepartment());
         System.out.println("writer>>>" + elecApp.getWriter());
         System.out.println("firstApprover>>>" + elecApp.getFirstApprover());
-        System.out.println("additionalFields>>>" + elecApp.getAdditionalFields());
+        System.out.println("additionalFields>>>" + elecApp.getAdditionalFields().get("expendType"));
         elecAppService.save(elecApp);
         return "success";
     }
@@ -60,8 +63,9 @@ public class EleAppController {
     }
     //문서 승인상태 바꾸기 (몇번째 승인자까지 갔느냐)
     @PostMapping("/elecapp/chageAppType")
-    public String chageAppType(@RequestBody Map<String, String> request) {
+    public String chageAppType(@RequestBody Map<String, String> request) throws MalformedURLException, ParseException, XmlRpcException {
         String elecAppId = request.get("elecAppId");
+        String writerEmail=request.get("writerEmail");
         return elecAppService.chageAppType(elecAppId);
     }
 

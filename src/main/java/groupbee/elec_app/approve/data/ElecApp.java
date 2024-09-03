@@ -25,6 +25,8 @@ public class ElecApp {
 
     private String secondApprover;
 
+    private String writerIdNumber;
+
     private String thirdApprover;
 
     private String rejectionReason;
@@ -65,4 +67,6 @@ public class ElecApp {
             throw new UnsupportedOperationException("writeday cannot be modified after initial set");
         }
     }
+
+
 }

@@ -28,10 +28,6 @@ springdoc:
   swagger-ui:
     path: ${SWAGGER_URL}
 
-
-mail:
-
-
-  smtp:
-    starttls:
+ODOO_URL: http://211.188.51.238:8069
+ODOO_DB: groupbee
 

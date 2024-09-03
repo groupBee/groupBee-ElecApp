@@ -30,4 +30,5 @@ public interface ElecAppRepository extends MongoRepository<ElecApp,String> {
 
 
 
+
 }

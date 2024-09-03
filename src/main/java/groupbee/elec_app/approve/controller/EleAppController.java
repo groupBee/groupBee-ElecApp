@@ -4,6 +4,7 @@ package groupbee.elec_app.approve.controller;
 import groupbee.elec_app.approve.data.ElecApp;
 import groupbee.elec_app.approve.feign.EmployeeFeignClient;
 import groupbee.elec_app.approve.service.ElecAppService;
+import groupbee.elec_app.approve.service.OdooService;
 import groupbee.elec_app.service.minio.MinioService;
 import lombok.AllArgsConstructor;
 import org.apache.xmlrpc.XmlRpcException;
@@ -23,6 +24,7 @@ public class EleAppController {
     final private ElecAppService elecAppService;
     final private MinioService minioService;
     final private EmployeeFeignClient employeeFeignClient;
+    private final OdooService odooService;
 
     //****작성****
 
@@ -71,7 +73,7 @@ public class EleAppController {
 
     //문서 거절사유 받고 문서상태 거절로 바꾸기
     @PostMapping("/elecapp/rejection")
-    public String rejection(@RequestParam String elecAppId, @RequestParam String rejectionReason) {
+    public String rejection(@RequestParam String elecAppId, @RequestParam String rejectionReason) throws MalformedURLException {
 
         ElecApp elecApp=elecAppService.findByID(elecAppId);
         elecApp.setApproveType(0);
@@ -84,7 +86,7 @@ public class EleAppController {
 
     //문서 아이디로 디테일 조회하기
     @GetMapping("/elecapp/findById")
-    public ElecApp findById(@RequestParam String elecAppId){
+    public ElecApp findById(@RequestParam String elecAppId) throws MalformedURLException {
         return elecAppService.findByID(elecAppId);
     }
 
@@ -119,6 +121,12 @@ public class EleAppController {
         return elecAppService.getAllReceived(memberId);
     }
 
+    //잔여 휴가일수
+    @GetMapping("/elecapp/days")
+    public int getLeaveDays() throws MalformedURLException {
+        System.out.println("잔여 휴가일"+odooService.getLeaveDays());
+        return odooService.getLeaveDays();
+    }
 
 
 }

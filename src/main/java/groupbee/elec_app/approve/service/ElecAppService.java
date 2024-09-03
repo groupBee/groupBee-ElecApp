@@ -142,19 +142,32 @@ public class ElecAppService {
     //****조회****
 
     //문서아이디로 디테일 구하기
-    public ElecApp findByID(String elecAppId){
+    public ElecApp findByID(String elecAppId) throws MalformedURLException {
 
 
         //writer의 id 값 던져서 휴가 일 수 read  (additional field 이용하기)
         ElecApp elecApp=repository.findById(elecAppId).get();
-//        if(elecApp.getAppDocType()==1){
-//            //휴가일수 받아오기
-//
-//
-//            //받아온 값 additionalfields 에 넣기
-//
-//
-//        }
+        if(elecApp.getAppDocType()==1){
+            //휴가일수 받아오기
+            int a=odooService.getLeaveDays();
+
+            //받아온 값 additionalfields 에 넣기
+            // 받아온 휴가 일수를 additionalFields에 추가
+            Map<String, Object> additionalFields = elecApp.getAdditionalFields();
+
+            // additionalFields가 null이면 새로 생성
+            if (additionalFields == null) {
+                additionalFields = new HashMap<>();
+            }
+
+            // "leaveDays"라는 키로 휴가 일수를 저장
+            additionalFields.put("leaveDays", a);
+
+
+            // 업데이트된 additionalFields를 ElecApp 객체에 설정
+            elecApp.setAdditionalFields(additionalFields);
+
+        }
 
 
         return elecApp;

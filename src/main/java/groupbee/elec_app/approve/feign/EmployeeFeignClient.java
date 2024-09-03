@@ -13,8 +13,10 @@ import java.util.Map;
 public interface EmployeeFeignClient {
     @GetMapping("/api/employee/info")
     Map<String,Object> getUserInfo();
+
     @PostMapping("/api/hr/info")
     Map<String,Object> getEmployeeInfo();
+
     @PostMapping("/api/hr/info/id")
     Map<String,Object> getEmployeeIdByIdNumber(@RequestParam String idNumber);
 

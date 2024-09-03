@@ -14,6 +14,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import static java.util.Arrays.asList;
+
 @Service
 public class OdooService {
 
@@ -136,14 +138,37 @@ public class OdooService {
             Map<String, Object> expenseReportData = new HashMap<>();
             expenseReportData.put("employee_id", employee_id);
             expenseReportData.put("company_id", employee_company_id);
-            expenseReportData.put("product_id", 1);
+            //지출 종류
+            int expendType = Integer.parseInt(elecApp.getAdditionalFields().get("expend_Type").toString());
+            int productId;
+
+            switch (expendType) {
+                case 4:
+                    productId = 1;
+                    break;
+                case 5:
+                    productId = 2;
+                    break;
+                case 6:
+                    productId = 3;
+                    break;
+                case 7:
+                    productId = 4;
+                    break;
+                default:
+                    productId = 6;
+                    break;
+            }
+
+            expenseReportData.put("product_id", productId);
+
             expenseReportData.put("product_uom_id", 1);
             expenseReportData.put("account_id", 30);
             expenseReportData.put("create_uid", 2);
             expenseReportData.put("write_uid", 2);
             expenseReportData.put("state", "draft");
             expenseReportData.put("date", formatter.format(utilDate));  // 날짜를 String 형식으로 변환하여 전송
-            expenseReportData.put("description", "설명칸임당");
+            expenseReportData.put("description", elecApp.getAdditionalFields().get("title"));
             expenseReportData.put("payment_mode", "own_account");
             expenseReportData.put("quantity", 1);
             expenseReportData.put("currency_id", 32); // 한화
@@ -207,7 +232,7 @@ public class OdooService {
                     "p@ssw0rd", // password
                     "hr.expense", // Odoo 모델 이름
                     "write", // 메서드 이름
-                    Arrays.asList(
+                    asList(
                             Collections.singletonList(expenseId), // 수정할 레코드의 ID 리스트로 전달
                             new HashMap<String, Object>() {{ put("sheet_id", createdSheetId); }} // 수정할 데이터
                     )
@@ -215,6 +240,75 @@ public class OdooService {
             client.execute("execute_kw", updateParams);
         }
 
+    }
+
+    public int getLeaveDays() throws MalformedURLException {
+        int leaveDays = 0;
+
+        // 사용자 ID로부터 직원 번호(employeeId) 가져오기
+        Map<String, Object> employeeinfo = employeeFeignClient.getEmployeeInfo();
+
+        // employeeIdNumber를 올바른 타입으로 처리
+        int employeeIdNumber = Integer.parseInt(String.valueOf(employeeinfo.get("id")));
+        System.out.println("employeeIdNumber: " + employeeIdNumber);
+        // Odoo와의 연결 설정
+        // Odoo와의 연결 설정
+        XmlRpcClientConfigImpl config = new XmlRpcClientConfigImpl();
+        config.setServerURL(new URL(String.format("%s/xmlrpc/2/object", this.url)));
+        XmlRpcClient client = new XmlRpcClient();
+        client.setConfig(config);
+
+        try {
+            // "hr.leave.allocation" 모델에서 특정 employee_id에 해당하는 number_of_days 값을 가져오기 위한 검색 조건 설정
+            Object[] searchParams = new Object[] {
+                    this.db,
+                    2, // user ID
+                    "p@ssw0rd", // password
+                    "hr.leave.allocation", // Odoo 모델 이름
+                    "search",
+                    asList(asList(
+                            asList("employee_id", "=", employeeIdNumber)))
+            };
+
+            // 검색 결과로 얻은 ID 목록
+            List<Object> ids = asList((Object[]) client.execute("execute_kw", searchParams));
+
+            if (!ids.isEmpty()) {
+                // 검색된 ID로 "number_of_days" 필드 값 읽기
+                Object[] readParams = new Object[] {
+                        this.db,
+                        2, // user ID
+                        "p@ssw0rd", // password
+                        "hr.leave.allocation", // Odoo 모델 이름
+                        "read",
+                        asList(ids),
+                        new HashMap<String, Object>() {{
+                            put("fields", new String[]{"number_of_days"});
+                        }}
+                };
+
+                // 서버에서 응답을 받음
+                Object[] records = (Object[]) client.execute("execute_kw", readParams);
+
+                // 모든 number_of_days 값을 합산
+                for (Object recordObj : records) {
+                    Map<String, Object> record = (Map<String, Object>) recordObj;
+                    Object daysObj = record.get("number_of_days");
+                    if (daysObj instanceof Double) {
+                        leaveDays += ((Double) daysObj).intValue();
+                    } else if (daysObj instanceof Integer) {
+                        leaveDays += (Integer) daysObj;
+                    } else {
+                        throw new IllegalArgumentException("Unexpected type for number_of_days: " + daysObj.getClass().getName());
+                    }
+                }
+            }
+
+        } catch (Exception e) {
+            System.err.println("Odoo 서버와의 통신 중 오류가 발생했습니다: " + e.getMessage());
+        }
+
+        return leaveDays;
     }
 
 }

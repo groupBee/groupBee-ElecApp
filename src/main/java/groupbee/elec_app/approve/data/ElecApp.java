@@ -41,8 +41,6 @@ public class ElecApp {
     private int approveStatus;
     // 현재 결재 상황 몇번째 승인자까지 갔는지
     private int approveType;
-    // 보안등급
-    private int level;
 
     //작성자 정보
     private String position;
@@ -59,6 +57,8 @@ public class ElecApp {
 
     // 이어지는 테이블에 들어갈 양식
     private Map<String, Object> additionalFields;
+
+    private String rejectedPerson;
 
     // Custom setter for writeday to prevent updates after initial set
     public void setWriteday(Date writeday) {

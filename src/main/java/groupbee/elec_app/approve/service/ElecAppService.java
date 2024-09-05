@@ -129,11 +129,15 @@ public class ElecAppService {
         return "success";
     }
 
-    //거절사유 입력받고 문서 상태 거절로 만들기
-    public String appRejection(String elecAppId,String rejectionReason){
-        ElecApp elecApp=repository.findById(elecAppId).get();
-        elecApp.setRejectionReason(rejectionReason);
+    // 거절사유 입력받고 문서 상태 거절로 만들기
+    public String appRejection(String elecAppId, String rejectionReason, String rejectedPerson) {
+        ElecApp elecApp = repository.findById(elecAppId).orElseThrow(() -> new IllegalArgumentException("Invalid elecAppId: " + elecAppId));
+
+        elecApp.setApproveType(0);  // 문서 상태를 거절로 설정
+        elecApp.setRejectionReason(rejectionReason);  // 거절 사유 설정
+        elecApp.setRejectedPerson(rejectedPerson);  // 거절한 사람 설정
         repository.save(elecApp);
+
         return "success";
     }
 

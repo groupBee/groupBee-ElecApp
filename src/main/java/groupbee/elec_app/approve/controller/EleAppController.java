@@ -41,10 +41,16 @@ public class EleAppController {
 
     @PostMapping("/elecapp/create")
     public String saveEleApp(@RequestBody ElecApp elecApp){
-        System.out.println("department>>>" + elecApp.getDepartment());
-        System.out.println("writer>>>" + elecApp.getWriter());
-        System.out.println("firstApprover>>>" + elecApp.getFirstApprover());
-        System.out.println("additionalFields>>>" + elecApp.getAdditionalFields().get("expendType"));
+        //문서 종류가 지출보고서이면 expendType이 있어야함 확인 로직
+         if (elecApp.getAppDocType() == 2) {
+            Map<String, Object> additionalFields = elecApp.getAdditionalFields();
+            // 'expendType'이 있는지 확인하고, 없으면 추가
+            if (!additionalFields.containsKey("expendType")) {
+                additionalFields.put("expendType", 1);  // expendType에 1을 추가
+            }
+            // 수정된 additionalFields를 elecApp에 다시 설정
+            elecApp.setAdditionalFields(additionalFields);
+        }
         elecAppService.save(elecApp);
         return "success";
     }
@@ -78,16 +84,13 @@ public class EleAppController {
         return elecAppService.chageAppType(elecAppId);
     }
 
-    //문서 거절사유 받고 문서상태 거절로 바꾸기
+    // 문서 거절사유 받고 문서 상태 거절로 바꾸기
     @PostMapping("/elecapp/rejection")
-    public String rejection(@RequestParam String elecAppId, @RequestParam String rejectionReason) throws MalformedURLException {
-
-        ElecApp elecApp=elecAppService.findByID(elecAppId);
-        elecApp.setApproveType(0);
-        elecAppService.save(elecApp);
-
-        return elecAppService.appRejection(elecAppId, rejectionReason);
+    public String rejection(@RequestParam String elecAppId, @RequestParam String rejectionReason, @RequestParam String rejectedPerson) throws MalformedURLException {
+        return elecAppService.appRejection(elecAppId, rejectionReason, rejectedPerson);
     }
+
+
 
     //****조회****
 

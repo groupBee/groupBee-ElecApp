@@ -1,7 +1,6 @@
 package groupbee.elec_app.approve.repository;
 
 import groupbee.elec_app.approve.data.ElecApp;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -10,7 +9,6 @@ import java.util.List;
 
 @Repository
 public interface ElecAppRepository extends MongoRepository<ElecApp,String> {
-
 
     // writer 이름으로 문서 찾기
     List<ElecApp> findByWriterOrderByApproveType(String writer);
@@ -27,8 +25,5 @@ public interface ElecAppRepository extends MongoRepository<ElecApp,String> {
     // elec_app 필드 값이 "abcd"인 문서 삭제
     @Query("{ 'elec_app': ?0 }")
     void deleteByElecApp(String elec_id);
-
-
-
 
 }
